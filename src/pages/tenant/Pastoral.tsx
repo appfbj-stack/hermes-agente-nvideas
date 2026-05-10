@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
-import { Book, Users, Calendar, Plus, Search, Filter, CheckCircle2, MapPin, MessageSquare, Phone, Briefcase, PartyPopper, Bot, Sparkles } from 'lucide-react';
+import { 
+  Book, Users, Calendar, Plus, Search, Filter, CheckCircle2, 
+  MapPin, MessageSquare, Phone, Briefcase, PartyPopper, Bot, 
+  Sparkles, LayoutDashboard, Church, Home, HeartHandshake, 
+  Heart, DollarSign, CheckSquare, Gift, Package, FileText, FileBarChart
+} from 'lucide-react';
 
 const INITIAL_EVENTS = [
   { id: 1, type: 'culto', title: 'Culto de Celebração', date: '10/05/2026', time: '19:00', location: 'Templo Principal', status: 'agendado' },
@@ -15,8 +20,28 @@ const INITIAL_MEMBERS = [
   { id: 3, name: 'Pastor Pedro', role: 'pastor', phone: '(11) 97777-7777', lastVisit: '-' },
 ];
 
+type TabType = 'dashboard' | 'agenda' | 'members' | 'services' | 'cells' | 'visits' | 'weddings' | 'counseling' | 'finance' | 'tasks' | 'festivities' | 'birthdays' | 'patrimonio' | 'sermons' | 'reports';
+
+const TABS: { id: TabType, label: string, icon: any }[] = [
+  { id: 'dashboard', label: 'Visão Geral', icon: LayoutDashboard },
+  { id: 'agenda', label: 'Agenda', icon: Calendar },
+  { id: 'members', label: 'Membros', icon: Users },
+  { id: 'services', label: 'Cultos', icon: Church },
+  { id: 'cells', label: 'Células', icon: Home },
+  { id: 'visits', label: 'Visitas', icon: HeartHandshake },
+  { id: 'weddings', label: 'Casamentos', icon: Heart },
+  { id: 'counseling', label: 'Aconselhamento', icon: MessageSquare },
+  { id: 'finance', label: 'Financeiro', icon: DollarSign },
+  { id: 'tasks', label: 'Tarefas', icon: CheckSquare },
+  { id: 'festivities', label: 'Festividades', icon: PartyPopper },
+  { id: 'birthdays', label: 'Aniversariantes', icon: Gift },
+  { id: 'patrimonio', label: 'Patrimônio', icon: Package },
+  { id: 'sermons', label: 'Esboços', icon: FileText },
+  { id: 'reports', label: 'Relatórios', icon: FileBarChart },
+];
+
 export const Pastoral: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'agenda' | 'membros'>('agenda');
+  const [activeTab, setActiveTab] = useState<TabType>('agenda');
   const [events, setEvents] = useState(INITIAL_EVENTS);
   const [members, setMembers] = useState(INITIAL_MEMBERS);
 
@@ -26,48 +51,31 @@ export const Pastoral: React.FC = () => {
         <div>
           <h2 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
             <Book className="text-secondary" />
-            Agenda Pastoral
+            Agenda Pastoral Completa
           </h2>
-          <p className="text-gray-400 mt-1 text-sm sm:text-base">Gerencie cultos, visitas, aconselhamentos e membros da igreja.</p>
+          <p className="text-gray-400 mt-1 text-sm sm:text-base">Gestão integrada da sua igreja: membros, cultos, financeiro e muito mais.</p>
         </div>
         <div className="flex gap-2">
-          {activeTab === 'agenda' && (
-            <button className="glass-button flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-white hover:bg-secondary/20 hover:border-secondary/50 w-full sm:w-auto">
-              <Plus size={16} />
-              <span>Novo Evento</span>
-            </button>
-          )}
-          {activeTab === 'membros' && (
-            <button className="glass-button flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-white hover:bg-secondary/20 hover:border-secondary/50 w-full sm:w-auto">
-              <Plus size={16} />
-              <span>Novo Membro</span>
-            </button>
-          )}
+          <button className="glass-button flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-white hover:bg-secondary/20 hover:border-secondary/50 w-full sm:w-auto">
+            <Plus size={16} />
+            <span>Novo Registro</span>
+          </button>
         </div>
       </div>
 
-      {/* Tabs */}
-      <div className="flex border-b border-white/10 gap-6">
-        <button 
-          onClick={() => setActiveTab('agenda')}
-          className={`pb-3 text-sm font-medium transition-colors relative ${activeTab === 'agenda' ? 'text-secondary-light' : 'text-gray-400 hover:text-white'}`}
-        >
-          <div className="flex items-center gap-2">
-            <Calendar size={18} />
-            Agenda & Eventos
-          </div>
-          {activeTab === 'agenda' && <div className="absolute bottom-0 left-0 w-full h-0.5 bg-secondary rounded-t-full"></div>}
-        </button>
-        <button 
-          onClick={() => setActiveTab('membros')}
-          className={`pb-3 text-sm font-medium transition-colors relative ${activeTab === 'membros' ? 'text-secondary-light' : 'text-gray-400 hover:text-white'}`}
-        >
-          <div className="flex items-center gap-2">
-            <Users size={18} />
-            Membros
-          </div>
-          {activeTab === 'membros' && <div className="absolute bottom-0 left-0 w-full h-0.5 bg-secondary rounded-t-full"></div>}
-        </button>
+      {/* Tabs - Horizontally scrollable */}
+      <div className="flex border-b border-white/10 gap-6 overflow-x-auto custom-scrollbar pb-1">
+        {TABS.map(tab => (
+          <button 
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            className={`pb-3 text-sm font-medium transition-colors relative whitespace-nowrap flex items-center gap-2 ${activeTab === tab.id ? 'text-secondary-light' : 'text-gray-400 hover:text-white'}`}
+          >
+            <tab.icon size={18} />
+            {tab.label}
+            {activeTab === tab.id && <div className="absolute bottom-0 left-0 w-full h-0.5 bg-secondary rounded-t-full"></div>}
+          </button>
+        ))}
       </div>
 
       {/* Search & Filter */}
@@ -76,7 +84,7 @@ export const Pastoral: React.FC = () => {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
           <input 
             type="text"
-            placeholder={activeTab === 'agenda' ? "Buscar eventos..." : "Buscar membros..."}
+            placeholder="Buscar nos registros..."
             className="w-full bg-white/5 border border-white/10 rounded-lg pl-9 pr-4 py-2 text-sm focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary/50 transition-all text-white placeholder-gray-500"
           />
         </div>
@@ -146,7 +154,7 @@ export const Pastoral: React.FC = () => {
           </div>
         )}
 
-        {activeTab === 'membros' && (
+        {activeTab === 'members' && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {members.map(member => (
               <div key={member.id} className="glass-panel p-5 rounded-xl border border-white/5 hover:border-white/20 transition-all flex flex-col">
@@ -179,6 +187,22 @@ export const Pastoral: React.FC = () => {
             ))}
           </div>
         )}
+
+        {activeTab !== 'agenda' && activeTab !== 'members' && (
+          <div className="flex flex-col items-center justify-center py-20 text-center glass-panel rounded-2xl border border-white/5">
+            <div className="w-16 h-16 rounded-full bg-secondary/10 flex items-center justify-center mb-4 text-secondary">
+              {React.createElement(TABS.find(t => t.id === activeTab)?.icon || Book, { size: 32 })}
+            </div>
+            <h3 className="text-xl font-bold text-white mb-2">Módulo {TABS.find(t => t.id === activeTab)?.label} em Construção</h3>
+            <p className="text-gray-400 max-w-md">
+              A interface e as funções para este módulo estão sendo migradas do sistema antigo para a nova plataforma Hermes SaaS. Em breve estará disponível!
+            </p>
+            <button className="mt-6 px-6 py-2 bg-white/5 hover:bg-white/10 text-white text-sm font-medium rounded-xl transition-colors border border-white/10">
+              Avise-me quando lançar
+            </button>
+          </div>
+        )}
+
       </div>
     </div>
   );
