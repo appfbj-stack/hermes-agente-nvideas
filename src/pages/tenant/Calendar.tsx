@@ -12,6 +12,7 @@ export const TenantCalendar: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [viewMode, setViewMode] = useState<'lista' | 'dia' | 'semana'>('lista');
   const [newEvent, setNewEvent] = useState({ title: '', time: '', client: '', type: 'video' });
+  const [currentDate, setCurrentDate] = useState(new Date(2026, 4, 10)); // May 10, 2026
 
   const handleAddEvent = (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,6 +37,32 @@ export const TenantCalendar: React.FC = () => {
   const removeEvent = (id: number) => {
     setEvents(events.filter(ev => ev.id !== id));
   };
+
+  const nextMonth = () => {
+    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
+  };
+
+  const prevMonth = () => {
+    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1));
+  };
+
+  const getMonthName = (date: Date) => {
+    return date.toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
+  };
+
+  // Helper for generating calendar days
+  const getDaysInMonth = (year: number, month: number) => {
+    return new Date(year, month + 1, 0).getDate();
+  };
+
+  const getFirstDayOfMonth = (year: number, month: number) => {
+    return new Date(year, month, 1).getDay();
+  };
+
+  const daysInMonth = getDaysInMonth(currentDate.getFullYear(), currentDate.getMonth());
+  const firstDay = getFirstDayOfMonth(currentDate.getFullYear(), currentDate.getMonth());
+  const daysArray = Array.from({ length: daysInMonth }, (_, i) => i + 1);
+  const emptyDays = Array.from({ length: firstDay }, (_, i) => `empty-${i}`);
 
   return (
     <div className="h-full flex flex-col p-8 space-y-6 relative">
@@ -122,30 +149,33 @@ export const TenantCalendar: React.FC = () => {
         <div className="space-y-6">
           <div className="glass-panel p-6 rounded-2xl">
             <div className="flex justify-between items-center mb-6">
-              <h3 className="font-bold text-lg">Maio 2026</h3>
+              <h3 className="font-bold text-lg capitalize">{getMonthName(currentDate)}</h3>
               <div className="flex gap-2">
-                <button className="p-1 text-gray-400 hover:text-white"><ChevronLeft size={20} /></button>
-                <button className="p-1 text-gray-400 hover:text-white"><ChevronRight size={20} /></button>
+                <button onClick={prevMonth} className="p-1 text-gray-400 hover:text-white"><ChevronLeft size={20} /></button>
+                <button onClick={nextMonth} className="p-1 text-gray-400 hover:text-white"><ChevronRight size={20} /></button>
               </div>
             </div>
             
-            {/* Very simple mock calendar grid */}
+            {/* Calendar grid */}
             <div className="grid grid-cols-7 gap-2 text-center text-sm mb-2">
               {['D', 'S', 'T', 'Q', 'Q', 'S', 'S'].map(d => (
                 <div key={d} className="text-gray-500 font-medium">{d}</div>
               ))}
             </div>
             <div className="grid grid-cols-7 gap-2 text-center text-sm">
-              {Array.from({ length: 31 }).map((_, i) => (
+              {emptyDays.map(empty => (
+                <div key={empty} className="p-2"></div>
+              ))}
+              {daysArray.map((day) => (
                 <div 
-                  key={i} 
+                  key={day} 
                   className={`p-2 rounded-lg cursor-pointer transition-colors ${
-                    i + 1 === 10 ? 'bg-secondary text-white font-bold shadow-lg shadow-secondary/30' : 
-                    i + 1 === 11 || i + 1 === 15 ? 'text-secondary-light font-bold bg-secondary/10' : 
+                    day === 10 && currentDate.getMonth() === 4 ? 'bg-secondary text-white font-bold shadow-lg shadow-secondary/30' : 
+                    (day === 11 || day === 15) && currentDate.getMonth() === 4 ? 'text-secondary-light font-bold bg-secondary/10' : 
                     'text-gray-300 hover:bg-white/10'
                   }`}
                 >
-                  {i + 1}
+                  {day}
                 </div>
               ))}
             </div>
@@ -206,43 +236,96 @@ export const TenantCalendar: React.FC = () => {
           </div>
 
           <div className="flex-1 space-y-4 overflow-auto pr-2">
-            {events.map(event => (
-              <div key={event.id} className="bg-black/20 border border-white/5 p-5 rounded-xl flex items-start gap-4 hover:border-secondary/30 transition-colors group relative">
-                <div className="mt-1 p-3 rounded-xl bg-secondary/10 text-secondary-light group-hover:bg-secondary group-hover:text-white transition-colors">
-                  {event.type === 'video' ? <Video size={20} /> : <CalendarIcon size={20} />}
-                </div>
-                
-                <div className="flex-1">
-                  <h4 className="font-bold text-white text-lg mb-1">{event.title}</h4>
-                  
-                  <div className="flex flex-wrap gap-4 text-sm text-gray-400 mt-3">
-                    <div className="flex items-center gap-1.5">
-                      <Clock size={16} className="text-gray-500" />
-                      {event.time}
+            {viewMode === 'lista' && (
+              <>
+                {events.map(event => (
+                  <div key={event.id} className="bg-black/20 border border-white/5 p-5 rounded-xl flex items-start gap-4 hover:border-secondary/30 transition-colors group relative">
+                    <div className="mt-1 p-3 rounded-xl bg-secondary/10 text-secondary-light group-hover:bg-secondary group-hover:text-white transition-colors">
+                      {event.type === 'video' ? <Video size={20} /> : <CalendarIcon size={20} />}
                     </div>
-                    <div className="flex items-center gap-1.5">
-                      <User size={16} className="text-gray-500" />
-                      {event.client}
+                    
+                    <div className="flex-1">
+                      <h4 className="font-bold text-white text-lg mb-1">{event.title}</h4>
+                      
+                      <div className="flex flex-wrap gap-4 text-sm text-gray-400 mt-3">
+                        <div className="flex items-center gap-1.5">
+                          <Clock size={16} className="text-gray-500" />
+                          {event.time}
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <User size={16} className="text-gray-500" />
+                          {event.client}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex gap-2">
+                      <button className="px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-sm font-medium transition-colors border border-white/10 hidden md:block">
+                        Detalhes
+                      </button>
+                      <button 
+                        onClick={() => removeEvent(event.id)}
+                        className="px-3 py-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 text-sm font-medium transition-colors border border-red-500/10"
+                        title="Cancelar Evento"
+                      >
+                        <X size={16} />
+                      </button>
                     </div>
                   </div>
-                </div>
+                ))}
+              </>
+            )}
 
-                <div className="flex gap-2">
-                  <button className="px-4 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-sm font-medium transition-colors border border-white/10 hidden md:block">
-                    Detalhes
-                  </button>
-                  <button 
-                    onClick={() => removeEvent(event.id)}
-                    className="px-3 py-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 text-sm font-medium transition-colors border border-red-500/10"
-                    title="Cancelar Evento"
-                  >
-                    <X size={16} />
-                  </button>
-                </div>
+            {viewMode === 'dia' && (
+              <div className="space-y-2">
+                {Array.from({ length: 12 }).map((_, i) => {
+                  const hour = i + 8; // Start at 8 AM
+                  const timeString = `${hour.toString().padStart(2, '0')}:00`;
+                  // Find if there's an event starting around this hour
+                  const hourEvent = events.find(e => e.time.startsWith(timeString));
+                  
+                  return (
+                    <div key={i} className="flex items-start gap-4">
+                      <div className="w-16 text-right text-xs text-gray-500 font-mono pt-3">
+                        {timeString}
+                      </div>
+                      <div className={`flex-1 border-t ${hourEvent ? 'border-secondary/50' : 'border-white/10'} pt-2 pb-6 relative`}>
+                        {hourEvent && (
+                          <div className="absolute top-2 left-0 right-0 bg-secondary/20 border border-secondary/30 rounded-lg p-3">
+                            <p className="font-bold text-white text-sm">{hourEvent.title}</p>
+                            <p className="text-xs text-secondary-light mt-1">{hourEvent.client}</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
-            ))}
+            )}
 
-            {events.length === 0 && (
+            {viewMode === 'semana' && (
+              <div className="grid grid-cols-5 gap-4 h-full">
+                {['Seg', 'Ter', 'Qua', 'Qui', 'Sex'].map((day, i) => (
+                  <div key={day} className="flex flex-col border-r border-white/5 pr-4 last:border-0">
+                    <div className="text-center mb-4">
+                      <p className="text-gray-400 text-xs uppercase">{day}</p>
+                      <p className={`text-lg font-bold ${i === 2 ? 'text-secondary' : 'text-white'}`}>{10 + i}</p>
+                    </div>
+                    <div className="flex-1 relative">
+                      {/* Randomly distribute events for mockup purposes */}
+                      {events.slice(0, i === 2 ? 2 : i === 1 ? 1 : 0).map((ev, idx) => (
+                        <div key={idx} className={`mb-2 p-2 rounded bg-black/40 border-l-2 ${ev.type === 'video' ? 'border-blue-500' : 'border-yellow-500'}`}>
+                          <p className="text-xs font-bold text-white truncate">{ev.title}</p>
+                          <p className="text-[10px] text-gray-500">{ev.time.split('-')[0]}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {events.length === 0 && viewMode === 'lista' && (
               <div className="p-8 text-center border-2 border-dashed border-white/10 rounded-xl mt-8">
                 <CalendarIcon size={32} className="mx-auto text-gray-600 mb-3" />
                 <h4 className="text-gray-300 font-medium">Nenhum evento agendado</h4>
