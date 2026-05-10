@@ -55,7 +55,7 @@ export const TenantCrm: React.FC = () => {
   };
 
   return (
-    <div className="h-full flex flex-col p-8 space-y-6 relative">
+    <div className="h-full flex flex-col p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-6 relative">
       {/* Modal Novo Lead */}
       {isModalOpen && (
         <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
@@ -107,21 +107,21 @@ export const TenantCrm: React.FC = () => {
         </div>
       )}
 
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">CRM & Pipeline</h2>
-          <p className="text-gray-400 mt-1">Gerencie seus clientes e acompanhe o funil de vendas (Follow-ups).</p>
+          <p className="text-gray-400 mt-1 text-sm sm:text-base">Gerencie seus clientes e acompanhe o funil de vendas (Follow-ups).</p>
         </div>
         <button 
           onClick={() => setIsModalOpen(true)}
-          className="glass-button flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-white hover:bg-secondary/20 hover:border-secondary/50"
+          className="glass-button flex items-center justify-center sm:justify-start gap-2 px-4 py-2 rounded-xl text-sm font-medium text-white hover:bg-secondary/20 hover:border-secondary/50 w-full sm:w-auto"
         >
           <Plus size={16} />
           <span>Novo Lead</span>
         </button>
       </div>
 
-      <div className="glass-panel rounded-2xl p-4 flex items-center gap-4 bg-black/20">
+      <div className="glass-panel rounded-2xl p-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-4 bg-black/20">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
           <input 
@@ -130,7 +130,7 @@ export const TenantCrm: React.FC = () => {
             className="w-full bg-white/5 border border-white/10 rounded-lg pl-9 pr-4 py-2 text-sm focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary/50 transition-all text-white placeholder-gray-500"
           />
         </div>
-        <button className="bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-sm text-gray-300 hover:bg-white/10 transition-colors flex items-center gap-2">
+        <button className="bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-sm text-gray-300 hover:bg-white/10 transition-colors flex items-center justify-center gap-2">
           <Filter size={16} />
           Filtros
         </button>

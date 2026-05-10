@@ -4,9 +4,9 @@ import { Bot, Calendar, Briefcase, Users, ArrowRight, Activity, Zap, Settings } 
 
 export const TenantDashboard: React.FC = () => {
   return (
-    <div className="p-8 space-y-8">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-6 lg:space-y-8">
       {/* Welcome Section */}
-      <div className="relative glass-panel rounded-3xl p-8 overflow-hidden">
+      <div className="relative glass-panel rounded-3xl p-6 sm:p-8 overflow-hidden">
         <div className="absolute top-0 right-0 w-96 h-96 bg-secondary/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"></div>
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-accent/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
         

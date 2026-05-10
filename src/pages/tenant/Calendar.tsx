@@ -65,7 +65,7 @@ export const TenantCalendar: React.FC = () => {
   const emptyDays = Array.from({ length: firstDay }, (_, i) => `empty-${i}`);
 
   return (
-    <div className="h-full flex flex-col p-8 space-y-6 relative">
+    <div className="h-full flex flex-col p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-6 relative">
       {/* Modal Novo Evento */}
       {isModalOpen && (
         <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
@@ -130,26 +130,26 @@ export const TenantCalendar: React.FC = () => {
         </div>
       )}
 
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
         <div>
           <h2 className="text-2xl font-bold tracking-tight">Agenda & Follow-ups</h2>
-          <p className="text-gray-400 mt-1">Seus compromissos organizados pela IA.</p>
+          <p className="text-gray-400 mt-1 text-sm sm:text-base">Seus compromissos organizados pela IA.</p>
         </div>
         <button 
           onClick={() => setIsModalOpen(true)}
-          className="glass-button flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-white hover:bg-secondary/20 hover:border-secondary/50"
+          className="glass-button flex items-center justify-center sm:justify-start gap-2 px-4 py-2 rounded-xl text-sm font-medium text-white hover:bg-secondary/20 hover:border-secondary/50 w-full sm:w-auto"
         >
           <Plus size={16} />
           <span>Novo Evento</span>
         </button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1 min-h-0">
         {/* Left Side: Mini Calendar & Filters */}
-        <div className="space-y-6">
-          <div className="glass-panel p-6 rounded-2xl">
+        <div className="space-y-6 lg:overflow-y-auto custom-scrollbar">
+          <div className="glass-panel p-4 sm:p-6 rounded-2xl">
             <div className="flex justify-between items-center mb-6">
-              <h3 className="font-bold text-lg capitalize">{getMonthName(currentDate)}</h3>
+              <h3 className="font-bold text-base sm:text-lg capitalize">{getMonthName(currentDate)}</h3>
               <div className="flex gap-2">
                 <button onClick={prevMonth} className="p-1 text-gray-400 hover:text-white"><ChevronLeft size={20} /></button>
                 <button onClick={nextMonth} className="p-1 text-gray-400 hover:text-white"><ChevronRight size={20} /></button>
@@ -157,19 +157,19 @@ export const TenantCalendar: React.FC = () => {
             </div>
             
             {/* Calendar grid */}
-            <div className="grid grid-cols-7 gap-2 text-center text-sm mb-2">
+            <div className="grid grid-cols-7 gap-1 sm:gap-2 text-center text-xs sm:text-sm mb-2">
               {['D', 'S', 'T', 'Q', 'Q', 'S', 'S'].map(d => (
                 <div key={d} className="text-gray-500 font-medium">{d}</div>
               ))}
             </div>
-            <div className="grid grid-cols-7 gap-2 text-center text-sm">
+            <div className="grid grid-cols-7 gap-1 sm:gap-2 text-center text-xs sm:text-sm">
               {emptyDays.map(empty => (
-                <div key={empty} className="p-2"></div>
+                <div key={empty} className="p-1 sm:p-2"></div>
               ))}
               {daysArray.map((day) => (
                 <div 
                   key={day} 
-                  className={`p-2 rounded-lg cursor-pointer transition-colors ${
+                  className={`p-1 sm:p-2 rounded-lg cursor-pointer transition-colors ${
                     day === 10 && currentDate.getMonth() === 4 ? 'bg-secondary text-white font-bold shadow-lg shadow-secondary/30' : 
                     (day === 11 || day === 15) && currentDate.getMonth() === 4 ? 'text-secondary-light font-bold bg-secondary/10' : 
                     'text-gray-300 hover:bg-white/10'
@@ -181,7 +181,7 @@ export const TenantCalendar: React.FC = () => {
             </div>
           </div>
 
-          <div className="glass-panel p-6 rounded-2xl">
+          <div className="glass-panel p-4 sm:p-6 rounded-2xl">
             <h3 className="font-bold mb-4">Próximos (Resumo)</h3>
             <div className="space-y-4">
               <div className="flex items-center justify-between">
@@ -210,25 +210,25 @@ export const TenantCalendar: React.FC = () => {
         </div>
 
         {/* Right Side: Agenda List */}
-        <div className="lg:col-span-2 glass-panel p-6 rounded-2xl flex flex-col">
-          <div className="flex justify-between items-center mb-6">
+        <div className="lg:col-span-2 glass-panel p-4 sm:p-6 rounded-2xl flex flex-col min-h-[400px]">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
             <h3 className="font-bold text-lg">Eventos de Hoje</h3>
-            <div className="bg-black/30 p-1 rounded-lg flex text-sm">
+            <div className="bg-black/30 p-1 rounded-lg flex overflow-x-auto text-sm w-full sm:w-auto custom-scrollbar">
               <button 
                 onClick={() => setViewMode('lista')}
-                className={`px-4 py-1.5 rounded-md transition-colors ${viewMode === 'lista' ? 'bg-secondary text-white shadow' : 'text-gray-400 hover:text-white'}`}
+                className={`px-4 py-1.5 rounded-md transition-colors whitespace-nowrap flex-1 sm:flex-none ${viewMode === 'lista' ? 'bg-secondary text-white shadow' : 'text-gray-400 hover:text-white'}`}
               >
                 Lista
               </button>
               <button 
                 onClick={() => setViewMode('dia')}
-                className={`px-4 py-1.5 rounded-md transition-colors ${viewMode === 'dia' ? 'bg-secondary text-white shadow' : 'text-gray-400 hover:text-white'}`}
+                className={`px-4 py-1.5 rounded-md transition-colors whitespace-nowrap flex-1 sm:flex-none ${viewMode === 'dia' ? 'bg-secondary text-white shadow' : 'text-gray-400 hover:text-white'}`}
               >
                 Dia
               </button>
               <button 
                 onClick={() => setViewMode('semana')}
-                className={`px-4 py-1.5 rounded-md transition-colors ${viewMode === 'semana' ? 'bg-secondary text-white shadow' : 'text-gray-400 hover:text-white'}`}
+                className={`px-4 py-1.5 rounded-md transition-colors whitespace-nowrap flex-1 sm:flex-none ${viewMode === 'semana' ? 'bg-secondary text-white shadow' : 'text-gray-400 hover:text-white'}`}
               >
                 Semana
               </button>
