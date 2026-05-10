@@ -4,7 +4,30 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Trae Project</title>
+    <title>Hermes SaaS</title>
+    <script>
+      window.__APP_BOOTED__ = false;
+      window.__APP_BOOT_ERROR__ = null;
+
+      window.addEventListener('error', function (event) {
+        window.__APP_BOOT_ERROR__ = window.__APP_BOOT_ERROR__ || (event && event.message ? String(event.message) : 'Erro desconhecido');
+      });
+
+      window.addEventListener('unhandledrejection', function (event) {
+        var reason = event && event.reason;
+        var message = reason && reason.message ? String(reason.message) : String(reason || 'Promise rejeitada');
+        window.__APP_BOOT_ERROR__ = window.__APP_BOOT_ERROR__ || message;
+      });
+
+      setTimeout(function () {
+        if (window.__APP_BOOTED__) return;
+        var el = document.getElementById('boot-fallback');
+        if (!el) return;
+        var msg = document.getElementById('boot-fallback-msg');
+        if (msg && window.__APP_BOOT_ERROR__) msg.textContent = String(window.__APP_BOOT_ERROR__);
+        el.style.display = 'flex';
+      }, 2500);
+    </script>
     <script type="module">
       if (import.meta.hot?.on) {
         import.meta.hot.on('vite:error', (error) => {
@@ -18,6 +41,18 @@
     </script>
   </head>
   <body>
+    <noscript>
+      <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:#0b1020;color:#fff;padding:24px;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif;">
+        Ative o JavaScript para usar o Hermes.
+      </div>
+    </noscript>
+    <div id="boot-fallback" style="display:none;min-height:100vh;align-items:center;justify-content:center;background:#0b1020;color:#fff;padding:24px;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Noto Sans,sans-serif;">
+      <div style="max-width:860px;width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.10);border-radius:16px;padding:20px;">
+        <div style="font-weight:700;font-size:18px;">Falha ao carregar o Hermes</div>
+        <div style="margin-top:8px;color:rgba(255,255,255,0.75);font-size:13px;line-height:1.4;">O navegador carregou a página, mas o app não conseguiu inicializar. A causa mais comum é erro de JavaScript (ou bloqueio de script/extensão).</div>
+        <div style="margin-top:12px;color:rgba(255,255,255,0.85);font-size:13px;word-break:break-word;">Erro: <span id="boot-fallback-msg">(sem detalhes)</span></div>
+      </div>
+    </div>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

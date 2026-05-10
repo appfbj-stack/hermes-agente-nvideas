@@ -39,6 +39,7 @@ function RootApp() {
   const [fatal, setFatal] = useState<FatalError | null>(null)
 
   useEffect(() => {
+    ;(window as any).__APP_BOOTED__ = true
     const onError = (event: ErrorEvent) => {
       setFatal({ message: event.message || 'Erro desconhecido', stack: event.error?.stack })
     }
