@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Bot, Calendar, Briefcase, Users, ArrowRight, Activity, Zap } from 'lucide-react';
+import { Bot, Calendar, Briefcase, Users, ArrowRight, Activity, Zap, Settings } from 'lucide-react';
 
 export const TenantDashboard: React.FC = () => {
   return (
