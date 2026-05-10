@@ -9,7 +9,8 @@ import {
   LogOut,
   Bell,
   Menu,
-  X
+  X,
+  BookOpen
 } from 'lucide-react';
 import { cn } from './SuperAdminLayout';
 import { useAuthStore } from '../../store/authStore';
@@ -19,6 +20,7 @@ const SIDEBAR_LINKS = [
   { name: 'Hermes IA', path: '/t/chat', icon: Bot },
   { name: 'Agenda', path: '/t/calendar', icon: Calendar },
   { name: 'CRM', path: '/t/crm', icon: Briefcase },
+  { name: 'Agenda Pastoral', path: '/t/pastoral', icon: BookOpen },
   { name: 'Configurações', path: '/t/settings', icon: Settings },
 ];
 
