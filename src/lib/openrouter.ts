@@ -5,10 +5,10 @@ const OPENROUTER_API_KEY = import.meta.env.VITE_OPENROUTER_API_KEY;
 // We use the OpenAI SDK configured for OpenRouter as recommended by their docs
 export const openRouterClient = new OpenAI({
   baseURL: 'https://openrouter.ai/api/v1',
-  apiKey: OPENROUTER_API_KEY,
+  apiKey: OPENROUTER_API_KEY || 'dummy_key_to_prevent_crash',
   dangerouslyAllowBrowser: true, // For demo/MVP. In production, this should be an edge function!
   defaultHeaders: {
-    'HTTP-Referer': window.location.origin, // Required by OpenRouter
+    'HTTP-Referer': typeof window !== 'undefined' ? window.location.origin : 'https://hermes.app', // Required by OpenRouter
     'X-Title': 'Hermes SaaS', // Required by OpenRouter
   },
 });
