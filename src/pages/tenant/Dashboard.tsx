@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Bot, Calendar, Briefcase, Users, ArrowRight, Activity, Zap, Settings } from 'lucide-react';
+import { Bot, Calendar, Briefcase, Users, ArrowRight, Activity, Zap, Settings, BookOpen } from 'lucide-react';
 
 export const TenantDashboard: React.FC = () => {
   return (
@@ -41,6 +41,7 @@ export const TenantDashboard: React.FC = () => {
               { name: 'Hermes Chat', desc: 'Assistente pessoal e automações', icon: Bot, path: '/t/chat', color: 'text-secondary-light', bg: 'bg-secondary/20' },
               { name: 'CRM', desc: 'Gestão de clientes e funil', icon: Briefcase, path: '/t/crm', color: 'text-blue-400', bg: 'bg-blue-500/20' },
               { name: 'Agenda', desc: 'Compromissos e lembretes', icon: Calendar, path: '/t/calendar', color: 'text-green-400', bg: 'bg-green-500/20' },
+              { name: 'Agenda Pastoral', desc: 'Cultos, membros e eventos', icon: BookOpen, path: '/t/pastoral', color: 'text-orange-400', bg: 'bg-orange-500/20' },
               { name: 'Equipe', desc: 'Gestão de acessos', icon: Users, path: '/t/settings', color: 'text-purple-400', bg: 'bg-purple-500/20' },
             ].map(app => (
               <Link key={app.name} to={app.path} className="glass-panel p-5 rounded-2xl flex items-start gap-4 hover:border-white/20 transition-all group">
