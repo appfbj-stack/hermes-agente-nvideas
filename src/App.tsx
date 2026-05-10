@@ -8,6 +8,9 @@ import { Modules } from './pages/admin/Modules';
 import { AiConfig } from './pages/admin/AiConfig';
 import { TenantDashboard } from './pages/tenant/Dashboard';
 import { HermesChat } from './pages/tenant/Chat';
+import { TenantCrm } from './pages/tenant/Crm';
+import { TenantCalendar } from './pages/tenant/Calendar';
+import { TenantSettings } from './pages/tenant/Settings';
 import { Login } from './pages/auth/Login';
 import { useAuthStore } from './store/authStore';
 
@@ -69,9 +72,9 @@ function App() {
         }>
           <Route index element={<TenantDashboard />} />
           <Route path="chat" element={<HermesChat />} />
-          <Route path="calendar" element={<div className="p-8">Agenda Inteligente (Em breve)</div>} />
-          <Route path="crm" element={<div className="p-8">CRM (Em breve)</div>} />
-          <Route path="settings" element={<div className="p-8">Configurações do Cliente (Em breve)</div>} />
+          <Route path="calendar" element={<TenantCalendar />} />
+          <Route path="crm" element={<TenantCrm />} />
+          <Route path="settings" element={<TenantSettings />} />
         </Route>
       </Routes>
     </Router>
