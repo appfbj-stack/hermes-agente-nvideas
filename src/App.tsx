@@ -6,6 +6,7 @@ import { Dashboard } from './pages/admin/Dashboard';
 import { Tenants } from './pages/admin/Tenants';
 import { Modules } from './pages/admin/Modules';
 import { AiConfig } from './pages/admin/AiConfig';
+import { AdminSettings } from './pages/admin/Settings';
 import { TenantDashboard } from './pages/tenant/Dashboard';
 import { HermesChat } from './pages/tenant/Chat';
 import { TenantCrm } from './pages/tenant/Crm';
@@ -61,7 +62,7 @@ function App() {
           <Route path="tenants" element={<Tenants />} />
           <Route path="modules" element={<Modules />} />
           <Route path="ai-config" element={<AiConfig />} />
-          <Route path="settings" element={<div className="p-4">Configurações Globais (Em breve)</div>} />
+          <Route path="settings" element={<AdminSettings />} />
         </Route>
 
         {/* Tenant Portal Routes */}
