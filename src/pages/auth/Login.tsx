@@ -102,7 +102,7 @@ export const Login: React.FC = () => {
                   social_provider_text: 'Cadastrar com {{provider}}',
                   link_text: 'Não tem uma conta? Cadastre-se',
                 },
-                forgot_password: {
+                forgotten_password: {
                   link_text: 'Esqueceu a senha?',
                   button_label: 'Enviar instruções',
                 }
