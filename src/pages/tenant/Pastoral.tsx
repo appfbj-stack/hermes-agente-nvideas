@@ -61,14 +61,14 @@ export const Pastoral: React.FC = () => {
   const [members, setMembers] = useState(INITIAL_MEMBERS);
 
   return (
-    <div className="h-full flex flex-col p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-6 relative">
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+      <div className="h-full flex flex-col p-2 sm:p-6 lg:p-8 space-y-4 sm:space-y-6 relative overflow-hidden">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 shrink-0">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
+          <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-white flex items-center gap-2">
             <Book className="text-secondary" />
             Agenda Pastoral Completa
           </h2>
-          <p className="text-gray-400 mt-1 text-sm sm:text-base">Gestão integrada da sua igreja: membros, cultos, financeiro e muito mais.</p>
+          <p className="text-gray-400 mt-1 text-xs sm:text-sm lg:text-base">Gestão integrada da sua igreja: membros, cultos, financeiro e muito mais.</p>
         </div>
         <div className="flex gap-2">
           <button className="glass-button flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-white hover:bg-secondary/20 hover:border-secondary/50 w-full sm:w-auto">
@@ -79,14 +79,14 @@ export const Pastoral: React.FC = () => {
       </div>
 
       {/* Tabs - Horizontally scrollable */}
-      <div className="flex border-b border-white/10 gap-6 overflow-x-auto custom-scrollbar pb-1">
+      <div className="flex border-b border-white/10 gap-4 sm:gap-6 overflow-x-auto custom-scrollbar pb-1 shrink-0 -mx-2 px-2 sm:mx-0 sm:px-0">
         {TABS.map(tab => (
           <button 
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
             className={`pb-3 text-sm font-medium transition-colors relative whitespace-nowrap flex items-center gap-2 ${activeTab === tab.id ? 'text-secondary-light' : 'text-gray-400 hover:text-white'}`}
           >
-            <tab.icon size={18} />
+            <tab.icon size={16} className="sm:w-[18px] sm:h-[18px]" />
             {tab.label}
             {activeTab === tab.id && <div className="absolute bottom-0 left-0 w-full h-0.5 bg-secondary rounded-t-full"></div>}
           </button>
@@ -94,7 +94,7 @@ export const Pastoral: React.FC = () => {
       </div>
 
       {/* Search & Filter */}
-      <div className="glass-panel rounded-2xl p-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-4 bg-black/20">
+      <div className="glass-panel rounded-xl sm:rounded-2xl p-3 sm:p-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 bg-black/20 shrink-0">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
           <input 
@@ -110,7 +110,7 @@ export const Pastoral: React.FC = () => {
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-auto pr-2 custom-scrollbar">
+      <div className="flex-1 overflow-y-auto overflow-x-hidden pr-1 sm:pr-2 custom-scrollbar min-h-0">
         {activeTab === 'agenda' && <PastoralAgendaModule />}
         {activeTab === 'members' && <MembersModule />}
         {activeTab === 'services' && <ServicesModule />}
