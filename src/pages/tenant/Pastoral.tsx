@@ -57,6 +57,7 @@ const TABS: { id: TabType, label: string, icon: any }[] = [
 
 export const Pastoral: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>('agenda');
+  const [isChatOpen, setIsChatOpen] = useState(false);
   const [events, setEvents] = useState(INITIAL_EVENTS);
   const [members, setMembers] = useState(INITIAL_MEMBERS);
 
@@ -90,7 +91,10 @@ export const Pastoral: React.FC = () => {
           </h4>
           <p className="text-sm text-gray-300 mt-1">O Hermes organizou seus compromissos, identificou 3 membros ausentes há mais de 30 dias e gerou 1 novo esboço de sermão baseado na série atual.</p>
         </div>
-        <button className="px-4 py-2 bg-secondary hover:bg-secondary-light text-white text-sm font-medium rounded-lg transition-colors shadow-lg shadow-secondary/20 relative z-10 whitespace-nowrap">
+        <button 
+          onClick={() => setIsChatOpen(true)}
+          className="px-4 py-2 bg-secondary hover:bg-secondary-light text-white text-sm font-medium rounded-lg transition-colors shadow-lg shadow-secondary/20 relative z-10 whitespace-nowrap"
+        >
           Ver Insights
         </button>
       </div>
@@ -127,7 +131,60 @@ export const Pastoral: React.FC = () => {
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto overflow-x-hidden pr-1 sm:pr-2 custom-scrollbar min-h-0">
+      <div className="flex-1 overflow-y-auto overflow-x-hidden pr-1 sm:pr-2 custom-scrollbar min-h-0 relative">
+        {/* Full Chat Overlay - Absolute positioned over content when open */}
+        {isChatOpen && (
+          <div className="absolute inset-0 z-20 bg-black/90 backdrop-blur-sm rounded-2xl border border-secondary/30 flex flex-col overflow-hidden animate-fade-in-up">
+            <div className="p-4 border-b border-white/10 flex justify-between items-center bg-secondary/10">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-secondary to-accent flex items-center justify-center shadow-lg shadow-secondary/20">
+                  <Bot size={20} className="text-white" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-white flex items-center gap-2">
+                    Hermes IA <Sparkles size={14} className="text-secondary-light" />
+                  </h3>
+                  <p className="text-xs text-gray-400">Assistente Pastoral</p>
+                </div>
+              </div>
+              <button 
+                onClick={() => setIsChatOpen(false)}
+                className="p-2 text-gray-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+              >
+                <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+              </button>
+            </div>
+            
+            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+              <div className="flex gap-3">
+                <div className="w-8 h-8 rounded-full bg-secondary/20 flex items-center justify-center shrink-0">
+                  <Bot size={16} className="text-secondary-light" />
+                </div>
+                <div className="bg-white/5 border border-white/10 rounded-2xl rounded-tl-none p-4 max-w-[80%]">
+                  <p className="text-sm text-gray-200">
+                    Olá, Pastor! Eu sou o Hermes, seu assistente inteligente. Analisei seus dados e percebi que você tem 3 membros que não comparecem aos cultos há mais de 30 dias. 
+                    <br/><br/>
+                    Gostaria que eu preparasse uma mensagem carinhosa de WhatsApp para você enviar a eles, ou prefere que eu agende uma visita pastoral para esta semana?
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-4 border-t border-white/10 bg-black/20">
+              <div className="relative">
+                <input 
+                  type="text" 
+                  placeholder="Peça ao Hermes para criar um esboço, buscar um membro ou agendar algo..."
+                  className="w-full bg-white/5 border border-white/10 rounded-xl pl-4 pr-12 py-3 text-sm focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary/50 text-white"
+                />
+                <button className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-secondary hover:bg-secondary-light text-white rounded-lg transition-colors">
+                  <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {activeTab === 'agenda' && <PastoralAgendaModule />}
         {activeTab === 'members' && <MembersModule />}
         {activeTab === 'services' && <ServicesModule />}
