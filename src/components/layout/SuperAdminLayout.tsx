@@ -8,7 +8,8 @@ import {
   LogOut,
   BrainCircuit,
   Menu,
-  X
+  X,
+  ArrowLeft
 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -20,10 +21,11 @@ export function cn(...inputs: (string | undefined | null | false)[]) {
 
 const SIDEBAR_LINKS = [
   { name: 'Dashboard', path: '/admin', icon: LayoutDashboard },
-  { name: 'Tenants', path: '/admin/tenants', icon: Users },
+  { name: 'Clientes (Tenants)', path: '/admin/tenants', icon: Users },
   { name: 'Modules', path: '/admin/modules', icon: Blocks },
   { name: 'AI Config', path: '/admin/ai-config', icon: BrainCircuit },
   { name: 'Settings', path: '/admin/settings', icon: Settings },
+  { name: 'Voltar ao App', path: '/t', icon: ArrowLeft },
 ];
 
 export const SuperAdminLayout: React.FC = () => {

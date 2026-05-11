@@ -11,7 +11,8 @@ import {
   Menu,
   X,
   BookOpen,
-  Wrench
+  Wrench,
+  Shield
 } from 'lucide-react';
 import { cn } from './SuperAdminLayout';
 import { useAuthStore } from '../../store/authStore';
@@ -24,6 +25,7 @@ const SIDEBAR_LINKS = [
   { name: 'Agenda Pastoral', path: '/t/pastoral', icon: BookOpen },
   { name: 'Oficina Mecânica', path: '/t/oficina', icon: Wrench },
   { name: 'Configurações', path: '/t/settings', icon: Settings },
+  { name: 'Admin Master', path: '/admin/tenants', icon: Shield },
 ];
 
 export const TenantLayout: React.FC = () => {
