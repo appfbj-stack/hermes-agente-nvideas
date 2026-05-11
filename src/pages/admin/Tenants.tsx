@@ -183,6 +183,44 @@ export const Tenants: React.FC = () => {
                 </div>
               </div>
 
+              {/* AI Consumption Section (from mockup) */}
+              <div className="border-t border-white/10 pt-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest">
+                    HERMES IA — CONSUMO
+                  </h4>
+                </div>
+                
+                <div className="bg-black/30 border border-white/5 rounded-xl p-4">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-xs text-gray-400">6 / 100 msgs</span>
+                    <span className="text-xs font-bold text-secondary-light">6%</span>
+                  </div>
+                  <div className="w-full bg-white/5 rounded-full h-1.5 mb-4">
+                    <div className="bg-secondary h-1.5 rounded-full" style={{ width: '6%' }}></div>
+                  </div>
+                  
+                  <div className="flex items-center gap-2">
+                    <div className="relative flex-1">
+                      <select className="w-full bg-white/5 border border-white/10 rounded-lg pl-8 pr-8 py-2 text-sm focus:outline-none focus:border-secondary text-white appearance-none">
+                        <option>Teste — 100 msgs</option>
+                        <option>Básico — 500 msgs</option>
+                        <option>Pro — 2000 msgs</option>
+                      </select>
+                      <div className="absolute left-2.5 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-green-400"></div>
+                      <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none border-l-[4px] border-r-[4px] border-t-[4px] border-l-transparent border-r-transparent border-t-gray-400"></div>
+                    </div>
+                    <button className="bg-secondary/20 hover:bg-secondary/30 border border-secondary/30 text-secondary-light p-2 rounded-lg transition-colors flex items-center justify-center shrink-0">
+                      <CheckCircle size={16} />
+                    </button>
+                    <button className="bg-white/5 hover:bg-white/10 border border-white/10 text-white px-3 py-2 rounded-lg text-sm transition-colors flex items-center gap-2 shrink-0">
+                      <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.59-9.21l-5.36-2.14"></path></svg>
+                      Zerar
+                    </button>
+                  </div>
+                </div>
+              </div>
+
               <div className="border-t border-white/10 pt-6">
                 <div className="flex items-center justify-between mb-4">
                   <h4 className="font-bold text-white flex items-center gap-2">
