@@ -35,7 +35,7 @@ export const Tenants: React.FC = () => {
       <div className="flex flex-1 gap-6 overflow-hidden min-h-0">
         
         {/* Table Column */}
-        <div className={`glass-panel rounded-2xl flex-1 flex flex-col overflow-hidden transition-all duration-300 ${selectedTenant ? 'w-1/2 hidden lg:flex' : 'w-full'}`}>
+        <div className={`glass-panel rounded-2xl flex-1 flex flex-col overflow-hidden transition-all duration-300 ${selectedTenant ? 'hidden lg:flex lg:w-1/2' : 'w-full'}`}>
           {/* Toolbar */}
           <div className="p-4 border-b border-white/10 flex items-center justify-between bg-black/20 shrink-0">
             <div className="relative w-full max-w-sm">
@@ -129,15 +129,15 @@ export const Tenants: React.FC = () => {
 
         {/* Detail Panel */}
         {selectedTenant && activeTenantObj && (
-          <div className="glass-panel rounded-2xl w-full lg:w-[450px] xl:w-[500px] flex flex-col shrink-0 animate-fade-in-up border border-secondary/30 relative z-20">
-            <div className="p-5 border-b border-white/10 flex justify-between items-center bg-black/20">
+          <div className="glass-panel rounded-2xl w-full lg:w-[450px] xl:w-[500px] flex flex-col shrink-0 animate-fade-in-up border border-secondary/30 relative z-20 h-full">
+            <div className="p-5 border-b border-white/10 flex justify-between items-center bg-black/20 shrink-0">
               <h3 className="font-bold text-lg text-white">Gerenciar Assinatura</h3>
               <button onClick={() => setSelectedTenant(null)} className="p-1.5 hover:bg-white/10 rounded-lg text-gray-400 transition-colors">
                 <X size={20} />
               </button>
             </div>
             
-            <div className="p-5 overflow-y-auto custom-scrollbar space-y-6">
+            <div className="p-5 overflow-y-auto custom-scrollbar space-y-6 flex-1 min-h-0">
               
               {/* Tenant Header Info */}
               <div className="flex items-center gap-4">
