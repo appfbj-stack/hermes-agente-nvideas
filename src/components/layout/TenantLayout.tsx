@@ -158,10 +158,40 @@ export const TenantLayout: React.FC = () => {
         </header>
 
         {/* Page Content */}
-        <div className="flex-1 overflow-auto relative z-0">
+        <div className="flex-1 overflow-auto relative z-0 pb-16 lg:pb-0">
           <Outlet />
         </div>
       </main>
+
+      {/* Mobile Bottom Navigation */}
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 glass-panel border-t border-white/10 flex items-center justify-around px-2 pb-safe z-40 bg-background/80 backdrop-blur-xl">
+        {SIDEBAR_LINKS.slice(0, 4).map((link) => {
+          const Icon = link.icon;
+          const isActive = link.path === '/t' ? location.pathname === '/t' : location.pathname.startsWith(link.path);
+          return (
+            <Link
+              key={link.path}
+              to={link.path}
+              className={cn(
+                "flex flex-col items-center gap-1 p-3 min-w-[64px] transition-colors relative",
+                isActive ? "text-secondary-light" : "text-gray-500 hover:text-gray-300"
+              )}
+            >
+              {isActive && <div className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-1 bg-secondary rounded-b-full"></div>}
+              <Icon size={20} />
+              <span className="text-[10px] font-medium truncate w-full text-center">{link.name.split(' ')[0]}</span>
+            </Link>
+          );
+        })}
+        {/* Admin Master direct link for mobile */}
+        <Link
+          to="/admin/tenants"
+          className="flex flex-col items-center gap-1 p-3 min-w-[64px] transition-colors text-gray-500 hover:text-secondary-light"
+        >
+          <Shield size={20} />
+          <span className="text-[10px] font-medium truncate w-full text-center">Admin</span>
+        </Link>
+      </nav>
     </div>
   );
 };
