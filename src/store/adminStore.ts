@@ -11,6 +11,7 @@ export interface Tenant {
   users_count: number;
   api_calls: number;
   created_at: string;
+  modules: string[];
 }
 
 export interface AppModule {
@@ -31,49 +32,25 @@ interface AdminState {
   fetchModules: () => Promise<void>;
   updateTenantStatus: (id: string, status: Tenant['status']) => Promise<void>;
   toggleModuleStatus: (id: string) => Promise<void>;
+  toggleTenantModule: (tenantId: string, moduleId: string) => Promise<void>;
 }
 
 // Mock data initially. Will be replaced with Supabase calls later.
 const MOCK_MODULES: AppModule[] = [
-  { id: 'm1', name: 'Hermes IA', category: 'core', description: 'Assistente pessoal inteligente com memória', is_public: true, active_tenants: 15, icon: 'Bot' },
-  { id: 'm2', name: 'CRM Pro', category: 'business', description: 'Gestão de relacionamento com clientes', is_public: true, active_tenants: 8, icon: 'Briefcase' },
-  { id: 'm3', name: 'Agenda Inteligente', category: 'productivity', description: 'Agendamento com IA e lembretes automáticos', is_public: true, active_tenants: 12, icon: 'Calendar' },
-  { id: 'm4', name: 'WhatsApp Bot', category: 'communication', description: 'Atendimento automatizado via WhatsApp', is_public: false, active_tenants: 3, icon: 'MessageSquare' },
-  { id: 'm5', name: 'Gestão de Igreja', category: 'niche', description: 'Módulo específico para congregações', is_public: true, active_tenants: 2, icon: 'BookOpen' },
-  { id: 'm6', name: 'Oficina Auto', category: 'niche', description: 'Orçamentos e gestão de veículos', is_public: true, active_tenants: 1, icon: 'Wrench' },
+  { id: 'core_crm', name: 'CRM & Pipeline', category: 'business', description: 'Gestão de clientes, leads e funil de vendas avançado.', icon: 'Briefcase', is_public: true, active_tenants: 145 },
+  { id: 'core_calendar', name: 'Agenda Global', category: 'productivity', description: 'Calendário compartilhado e agendamento de recursos.', icon: 'Calendar', is_public: true, active_tenants: 210 },
+  { id: 'ai_hermes', name: 'Hermes IA', category: 'core', description: 'Assistente virtual inteligente integrado em todos os módulos.', icon: 'Bot', is_public: true, active_tenants: 89 },
+  { id: 'niche_pastoral', name: 'Agenda Pastoral', category: 'niche', description: 'Gestão completa para igrejas: membros, cultos, células, financeiro.', icon: 'BookOpen', is_public: true, active_tenants: 42 },
+  { id: 'niche_oficina', name: 'Oficina Mecânica', category: 'niche', description: 'Gestão de veículos, OS, estoque e faturamento para mecânicas.', icon: 'Wrench', is_public: true, active_tenants: 15 },
+  { id: 'comm_chat', name: 'Chat Interno', category: 'productivity', description: 'Comunicação em tempo real entre a equipe.', icon: 'MessageSquare', is_public: false, active_tenants: 0 },
 ];
 
 const MOCK_TENANTS: Tenant[] = [
-  {
-    id: '1',
-    name: 'Acme Corp',
-    subdomain: 'acme',
-    plan: 'enterprise',
-    status: 'active',
-    users_count: 15,
-    api_calls: 150240,
-    created_at: '2024-01-15T10:00:00Z'
-  },
-  {
-    id: '2',
-    name: 'TechFlow',
-    subdomain: 'techflow',
-    plan: 'pro',
-    status: 'active',
-    users_count: 5,
-    api_calls: 45000,
-    created_at: '2024-02-20T14:30:00Z'
-  },
-  {
-    id: '3',
-    name: 'Suspended LLC',
-    subdomain: 'suspended',
-    plan: 'free',
-    status: 'blocked',
-    users_count: 1,
-    api_calls: 0,
-    created_at: '2024-03-01T09:15:00Z'
-  }
+  { id: '1', name: 'Acme Corp', subdomain: 'acme', plan: 'enterprise', status: 'active', users_count: 15, api_calls: 45230, created_at: '2024-01-15T10:00:00Z', modules: ['core_crm', 'core_calendar', 'ai_hermes'] },
+  { id: '2', name: 'Global Tech', subdomain: 'globaltech', plan: 'pro', status: 'active', users_count: 5, api_calls: 12500, created_at: '2024-02-20T14:30:00Z', modules: ['core_crm'] },
+  { id: '3', name: 'Igreja Vida Nova', subdomain: 'igrejavida', plan: 'pro', status: 'active', users_count: 3, api_calls: 8900, created_at: '2025-03-01T09:15:00Z', modules: ['niche_pastoral', 'ai_hermes'] },
+  { id: '4', name: 'Oficina do Zé', subdomain: 'oficinaze', plan: 'starter', status: 'active', users_count: 2, api_calls: 1200, created_at: '2025-04-10T11:00:00Z', modules: ['niche_oficina', 'ai_hermes'] },
+  { id: '5', name: 'Startup Inc', subdomain: 'startup', plan: 'free', status: 'blocked', users_count: 1, api_calls: 100000, created_at: '2024-11-20T08:00:00Z', modules: ['core_calendar'] },
 ];
 
 export const useAdminStore = create<AdminState>((set) => ({
@@ -110,6 +87,23 @@ export const useAdminStore = create<AdminState>((set) => ({
     set(state => ({
       modules: state.modules.map(m => m.id === id ? { ...m, is_public: !m.is_public } : m),
       isLoading: false
+    }));
+  },
+
+  toggleTenantModule: async (tenantId: string, moduleId: string) => {
+    set(state => ({
+      tenants: state.tenants.map(t => {
+        if (t.id === tenantId) {
+          const hasModule = t.modules.includes(moduleId);
+          return {
+            ...t,
+            modules: hasModule 
+              ? t.modules.filter(m => m !== moduleId) 
+              : [...t.modules, moduleId]
+          };
+        }
+        return t;
+      })
     }));
   }
 }));
