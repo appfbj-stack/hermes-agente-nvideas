@@ -12,6 +12,7 @@ import { HermesChat } from './pages/tenant/Chat';
 import { TenantCrm } from './pages/tenant/Crm';
 import { TenantCalendar } from './pages/tenant/Calendar';
 import { Pastoral } from './pages/tenant/Pastoral';
+import { OficinaMecanica } from './pages/tenant/Oficina';
 import { TenantSettings } from './pages/tenant/Settings';
 import { Login } from './pages/auth/Login';
 import { useAuthStore } from './store/authStore';
@@ -77,6 +78,7 @@ function App() {
           <Route path="calendar" element={<TenantCalendar />} />
           <Route path="crm" element={<TenantCrm />} />
           <Route path="pastoral" element={<Pastoral />} />
+          <Route path="oficina" element={<OficinaMecanica />} />
           <Route path="settings" element={<TenantSettings />} />
         </Route>
       </Routes>
