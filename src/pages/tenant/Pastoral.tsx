@@ -127,14 +127,33 @@ export const Pastoral: React.FC = () => {
         {activeTab === 'reports' && <ReportsModule />}
 
         {activeTab === 'dashboard' && (
-          <div className="flex flex-col items-center justify-center py-20 text-center glass-panel rounded-2xl border border-white/5">
-            <div className="w-16 h-16 rounded-full bg-secondary/10 flex items-center justify-center mb-4 text-secondary">
-              {React.createElement(TABS.find(t => t.id === activeTab)?.icon || Book, { size: 32 })}
+          <div className="space-y-4">
+            {/* Hermes AI Assistant Banner */}
+            <div className="glass-panel p-4 rounded-xl border border-secondary/30 bg-secondary/5 flex flex-col sm:flex-row sm:items-center gap-4 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-secondary/20 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2"></div>
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-secondary to-accent flex items-center justify-center shadow-lg shadow-secondary/20 shrink-0 relative z-10">
+                <Bot size={20} className="text-white" />
+              </div>
+              <div className="flex-1 relative z-10">
+                <h4 className="font-bold text-white flex items-center gap-2">
+                  Hermes IA <Sparkles size={14} className="text-secondary-light" />
+                </h4>
+                <p className="text-sm text-gray-300 mt-1">O Hermes organizou seus compromissos, identificou 3 membros ausentes há mais de 30 dias e gerou 1 novo esboço de sermão baseado na série atual.</p>
+              </div>
+              <button className="px-4 py-2 bg-secondary hover:bg-secondary-light text-white text-sm font-medium rounded-lg transition-colors shadow-lg shadow-secondary/20 relative z-10 whitespace-nowrap">
+                Ver Insights
+              </button>
             </div>
-            <h3 className="text-xl font-bold text-white mb-2">Dashboard Geral em Construção</h3>
-            <p className="text-gray-400 max-w-md">
-              Os relatórios consolidados e os gráficos gerais estarão disponíveis aqui.
-            </p>
+
+            <div className="flex flex-col items-center justify-center py-20 text-center glass-panel rounded-2xl border border-white/5">
+              <div className="w-16 h-16 rounded-full bg-secondary/10 flex items-center justify-center mb-4 text-secondary">
+                {React.createElement(TABS.find(t => t.id === activeTab)?.icon || Book, { size: 32 })}
+              </div>
+              <h3 className="text-xl font-bold text-white mb-2">Dashboard Geral em Construção</h3>
+              <p className="text-gray-400 max-w-md">
+                Os relatórios consolidados e os gráficos gerais estarão disponíveis aqui.
+              </p>
+            </div>
           </div>
         )}
 
