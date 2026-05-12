@@ -20,38 +20,39 @@ export const Tenants: React.FC = () => {
   const activeTenantObj = tenants.find(t => t.id === selectedTenant);
 
   return (
-    <div className="space-y-6 h-full flex flex-col relative">
+    <div className="space-y-6 h-full flex flex-col relative bg-background">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">Gerenciamento de Clientes (Tenants)</h2>
+          <h2 className="text-2xl font-bold tracking-tight text-white">Gerenciamento de Clientes (Tenants)</h2>
           <p className="text-gray-400 mt-1">Gerencie empresas, planos e acesse quais módulos cada um possui.</p>
         </div>
-        <button className="glass-button flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-white hover:bg-secondary/20 hover:border-secondary/50">
+        <button className="glass-button flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium text-white hover:bg-secondary/20 hover:border-secondary/50 border border-white/10">
           <Plus size={16} />
           <span>Novo Cliente</span>
         </button>
       </div>
 
-      <div className="flex flex-1 gap-6 overflow-hidden min-h-0">
+      <div className="flex flex-1 gap-6 overflow-hidden min-h-0 bg-[#1A2030] rounded-2xl border border-white/5 shadow-xl">
         
         {/* Table Column */}
-        <div className={`glass-panel rounded-2xl flex-1 flex flex-col overflow-hidden transition-all duration-300 ${selectedTenant ? 'hidden lg:flex lg:w-1/2' : 'w-full'}`}>
+        <div className={`flex-1 flex flex-col overflow-hidden transition-all duration-300 ${selectedTenant ? 'hidden lg:flex lg:w-1/2' : 'w-full'}`}>
           {/* Toolbar */}
-          <div className="p-4 border-b border-white/10 flex items-center justify-between bg-black/20 shrink-0">
+          <div className="p-4 border-b border-white/5 flex items-center justify-between bg-transparent shrink-0">
             <div className="relative w-full max-w-sm">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={16} />
               <input 
                 type="text"
                 placeholder="Buscar clientes..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-lg pl-9 pr-4 py-2 text-sm focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary/50 transition-all text-white placeholder-gray-500"
+                className="w-full bg-[#0B0F19] border border-white/5 rounded-lg pl-9 pr-4 py-2 text-sm focus:outline-none focus:border-secondary text-white placeholder-gray-500"
               />
             </div>
-            <div className="hidden sm:flex gap-2">
-              <select className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none text-gray-300">
+            <div className="hidden sm:flex gap-2 relative">
+              <select className="bg-[#0B0F19] border border-white/5 rounded-lg pl-4 pr-8 py-2 text-sm focus:outline-none text-gray-300 appearance-none">
                 <option value="">Todos os Planos</option>
               </select>
+              <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none border-l-[4px] border-r-[4px] border-t-[4px] border-l-transparent border-r-transparent border-t-gray-400"></div>
             </div>
           </div>
 
@@ -63,11 +64,11 @@ export const Tenants: React.FC = () => {
               </div>
             ) : (
               <table className="w-full text-left border-collapse">
-                <thead className="bg-white/5 sticky top-0 backdrop-blur-md z-10">
+                <thead className="bg-[#1A2030] sticky top-0 z-10 border-b border-white/5">
                   <tr>
-                    <th className="px-6 py-4 text-xs font-semibold text-gray-400 uppercase tracking-wider border-b border-white/10">Cliente</th>
-                    <th className="px-6 py-4 text-xs font-semibold text-gray-400 uppercase tracking-wider border-b border-white/10 hidden xl:table-cell">Plano / Status</th>
-                    <th className="px-6 py-4 text-xs font-semibold text-gray-400 uppercase tracking-wider border-b border-white/10 text-right">Ações</th>
+                    <th className="px-6 py-4 text-[10px] font-bold text-gray-500 uppercase tracking-widest">CLIENTE</th>
+                    <th className="px-6 py-4 text-[10px] font-bold text-gray-500 uppercase tracking-widest hidden xl:table-cell">PLANO / STATUS</th>
+                    <th className="px-6 py-4 text-[10px] font-bold text-gray-500 uppercase tracking-widest text-right">AÇÕES</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-white/5">
@@ -75,41 +76,41 @@ export const Tenants: React.FC = () => {
                     filteredTenants.map((tenant) => (
                       <tr 
                         key={tenant.id} 
-                        className={`transition-colors group cursor-pointer ${selectedTenant === tenant.id ? 'bg-secondary/10 border-l-4 border-secondary' : 'hover:bg-white/5 border-l-4 border-transparent'}`}
+                        className={`transition-colors group cursor-pointer ${selectedTenant === tenant.id ? 'bg-[#22293B]' : 'hover:bg-white/5'}`}
                         onClick={() => setSelectedTenant(tenant.id)}
                       >
                         <td className="px-6 py-4">
-                          <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-light to-secondary/30 flex items-center justify-center font-bold text-sm border border-white/10 shrink-0">
+                          <div className="flex items-center gap-4">
+                            <div className="w-10 h-10 rounded-full bg-[#2A3143] flex items-center justify-center font-bold text-sm text-gray-300 shrink-0">
                               {tenant.name.substring(0, 2).toUpperCase()}
                             </div>
                             <div className="min-w-0">
-                              <span className="font-bold text-white block truncate">{tenant.name}</span>
-                              <span className="text-xs text-gray-400 block truncate">{tenant.subdomain}.hermes.app</span>
+                              <span className="font-bold text-white block truncate text-base">{tenant.name}</span>
+                              <span className="text-xs text-gray-500 block truncate">{tenant.subdomain}.hermes.app</span>
                             </div>
                           </div>
                         </td>
                         <td className="px-6 py-4 hidden xl:table-cell">
-                          <div className="flex flex-col gap-1 items-start">
-                            <span className={`px-2 py-0.5 rounded text-[10px] uppercase font-bold border ${
-                              tenant.plan === 'enterprise' ? 'bg-purple-500/10 text-purple-400 border-purple-500/20' :
-                              tenant.plan === 'pro' ? 'bg-blue-500/10 text-blue-400 border-blue-500/20' :
-                              'bg-gray-500/10 text-gray-400 border-gray-500/20'
+                          <div className="flex flex-col gap-2 items-start">
+                            <span className={`px-2.5 py-0.5 rounded text-[10px] font-bold tracking-wider ${
+                              tenant.plan === 'enterprise' ? 'bg-purple-500/10 text-purple-400' :
+                              tenant.plan === 'pro' ? 'bg-blue-500/10 text-blue-400' :
+                              'bg-gray-500/10 text-gray-400'
                             }`}>
-                              {tenant.plan}
+                              {tenant.plan.toUpperCase()}
                             </span>
-                            <span className={`px-2 py-0.5 rounded text-[10px] uppercase font-bold border ${
-                              tenant.status === 'active' ? 'bg-green-500/10 text-green-400 border-green-500/20' :
-                              tenant.status === 'blocked' ? 'bg-red-500/10 text-red-400 border-red-500/20' :
-                              'bg-yellow-500/10 text-yellow-400 border-yellow-500/20'
+                            <span className={`px-2.5 py-0.5 rounded text-[10px] font-bold tracking-wider ${
+                              tenant.status === 'active' ? 'bg-green-500/10 text-green-400' :
+                              tenant.status === 'blocked' ? 'bg-red-500/10 text-red-400' :
+                              'bg-yellow-500/10 text-yellow-400'
                             }`}>
-                              {tenant.status}
+                              {tenant.status.toUpperCase()}
                             </span>
                           </div>
                         </td>
                         <td className="px-6 py-4 text-right">
-                          <button className="p-2 bg-white/5 hover:bg-white/10 text-gray-400 hover:text-white rounded-lg transition-colors" title="Gerenciar Acessos">
-                            <Key size={16} />
+                          <button className="text-gray-500 hover:text-white transition-colors" title="Gerenciar Acessos">
+                            <Key size={18} />
                           </button>
                         </td>
                       </tr>
@@ -150,10 +151,17 @@ export const Tenants: React.FC = () => {
                        <h3 className="text-white font-bold text-lg leading-tight">{activeTenantObj.name}</h3>
                        <p className="text-gray-500 text-sm">{activeTenantObj.subdomain}</p>
                     </div>
-                    <div className="bg-green-500/10 text-green-400 px-3 py-1 rounded-full flex items-center gap-2 text-sm font-medium border border-green-500/20">
-                       <div className="w-2 h-2 rounded-full bg-green-400"></div>
-                       ativo
-                    </div>
+                    <button 
+                       onClick={() => updateTenantStatus(activeTenantObj.id, activeTenantObj.status === 'active' ? 'blocked' : 'active')}
+                       className={`px-3 py-1 rounded-full flex items-center gap-2 text-sm font-medium border transition-colors ${
+                         activeTenantObj.status === 'active' 
+                           ? 'bg-green-500/10 text-green-400 border-green-500/20 hover:bg-green-500/20' 
+                           : 'bg-red-500/10 text-red-400 border-red-500/20 hover:bg-red-500/20'
+                       }`}
+                    >
+                       <div className={`w-2 h-2 rounded-full ${activeTenantObj.status === 'active' ? 'bg-green-400' : 'bg-red-400'}`}></div>
+                       {activeTenantObj.status === 'active' ? 'ativo' : 'bloqueado'}
+                    </button>
                  </div>
 
                  {/* Module List */}
