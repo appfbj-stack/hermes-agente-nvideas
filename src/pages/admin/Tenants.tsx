@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useAdminStore } from '../../store/adminStore';
-import { Search, Plus, MoreVertical, Edit2, Ban, CheckCircle, Package, Key, X, Building, Link2, DollarSign } from 'lucide-react';
+import { Search, Plus, MoreVertical, Edit2, Ban, CheckCircle, Package, Key, X, Building, Link2, DollarSign, Shield, ChevronLeft } from 'lucide-react';
 
 export const Tenants: React.FC = () => {
   const { tenants, modules, isLoading, fetchTenants, fetchModules, updateTenantStatus, toggleTenantModule } = useAdminStore();
@@ -129,132 +129,84 @@ export const Tenants: React.FC = () => {
 
         {/* Detail Panel */}
         {selectedTenant && activeTenantObj && (
-          <div className="glass-panel rounded-2xl w-full lg:w-[450px] xl:w-[500px] flex flex-col shrink-0 animate-fade-in-up border border-secondary/30 relative z-20 h-full">
-            <div className="p-5 border-b border-white/10 flex justify-between items-center bg-black/20 shrink-0">
-              <h3 className="font-bold text-lg text-white">Gerenciar Assinatura</h3>
-              <button onClick={() => setSelectedTenant(null)} className="p-1.5 hover:bg-white/10 rounded-lg text-gray-400 transition-colors">
-                <X size={20} />
-              </button>
+          <div className="bg-[#0B0F19] w-full h-full flex flex-col absolute inset-0 z-30 lg:relative lg:w-[450px] xl:w-[500px] border-l border-white/5 animate-fade-in-up">
+            {/* Header matching image */}
+            <div className="flex items-center gap-4 p-5 sm:p-6 border-b border-white/5 shrink-0">
+               <button onClick={() => setSelectedTenant(null)} className="text-white hover:bg-white/10 p-2 -ml-2 rounded-full transition-colors lg:hidden">
+                  <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+               </button>
+               <Shield className="text-secondary" size={28} />
+               <div>
+                  <h2 className="text-xl font-bold text-white leading-tight">Admin Master</h2>
+                  <p className="text-sm text-gray-400">Módulos por cliente</p>
+               </div>
             </div>
             
-            <div className="p-5 overflow-y-auto custom-scrollbar space-y-6 flex-1 min-h-0">
-              
-              {/* Tenant Header Info */}
-              <div className="flex items-center gap-4">
-                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary-light to-secondary/30 flex items-center justify-center font-bold text-2xl border border-white/10 shadow-lg">
-                  {activeTenantObj.name.substring(0, 2).toUpperCase()}
-                </div>
-                <div>
-                  <h2 className="text-xl font-black text-white">{activeTenantObj.name}</h2>
-                  <div className="flex items-center gap-2 text-sm text-gray-400 mt-1">
-                    <Link2 size={14} />
-                    <a href={`https://${activeTenantObj.subdomain}.hermes.app`} target="_blank" className="hover:text-secondary-light transition-colors underline-offset-2 hover:underline">
-                      {activeTenantObj.subdomain}.hermes.app
-                    </a>
-                  </div>
-                </div>
-              </div>
-
-              {/* Status and Plan Toggles */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="bg-black/30 border border-white/5 rounded-xl p-4">
-                  <div className="flex items-center gap-2 text-gray-400 mb-2"><Building size={16}/> <span className="text-xs font-bold uppercase">Status da Conta</span></div>
-                  <select 
-                    value={activeTenantObj.status} 
-                    onChange={(e) => updateTenantStatus(activeTenantObj.id, e.target.value as any)}
-                    className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-secondary text-white"
-                  >
-                    <option value="active">Ativo (Liberado)</option>
-                    <option value="blocked">Bloqueado (Inadimplente)</option>
-                    <option value="pending">Pendente</option>
-                  </select>
-                </div>
-                <div className="bg-black/30 border border-white/5 rounded-xl p-4">
-                  <div className="flex items-center gap-2 text-gray-400 mb-2"><DollarSign size={16}/> <span className="text-xs font-bold uppercase">Plano</span></div>
-                  <select 
-                    value={activeTenantObj.plan} 
-                    className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-secondary text-white"
-                    disabled
-                  >
-                    <option value="free">Free / Trial</option>
-                    <option value="pro">Pro</option>
-                    <option value="enterprise">Enterprise</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* AI Consumption Section (from mockup) */}
-              <div className="border-t border-white/10 pt-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest">
-                    HERMES IA — CONSUMO
-                  </h4>
-                </div>
-                
-                <div className="bg-black/30 border border-white/5 rounded-xl p-4">
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-xs text-gray-400">6 / 100 msgs</span>
-                    <span className="text-xs font-bold text-secondary-light">6%</span>
-                  </div>
-                  <div className="w-full bg-white/5 rounded-full h-1.5 mb-4">
-                    <div className="bg-secondary h-1.5 rounded-full" style={{ width: '6%' }}></div>
-                  </div>
-                  
-                  <div className="flex items-center gap-2">
-                    <div className="relative flex-1">
-                      <select className="w-full bg-white/5 border border-white/10 rounded-lg pl-8 pr-8 py-2 text-sm focus:outline-none focus:border-secondary text-white appearance-none">
-                        <option>Teste — 100 msgs</option>
-                        <option>Básico — 500 msgs</option>
-                        <option>Pro — 2000 msgs</option>
-                      </select>
-                      <div className="absolute left-2.5 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-green-400"></div>
-                      <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none border-l-[4px] border-r-[4px] border-t-[4px] border-l-transparent border-r-transparent border-t-gray-400"></div>
+            <div className="p-4 sm:p-6 overflow-y-auto custom-scrollbar flex-1 min-h-0">
+              <div className="bg-[#151A27] rounded-2xl border border-white/5 overflow-hidden shadow-xl">
+                 {/* Tenant Info */}
+                 <div className="p-5 border-b border-white/5 flex justify-between items-center bg-[#1A2030]">
+                    <div>
+                       <h3 className="text-white font-bold text-lg leading-tight">{activeTenantObj.name}</h3>
+                       <p className="text-gray-500 text-sm">{activeTenantObj.subdomain}</p>
                     </div>
-                    <button className="bg-secondary/20 hover:bg-secondary/30 border border-secondary/30 text-secondary-light p-2 rounded-lg transition-colors flex items-center justify-center shrink-0">
-                      <CheckCircle size={16} />
-                    </button>
-                    <button className="bg-white/5 hover:bg-white/10 border border-white/10 text-white px-3 py-2 rounded-lg text-sm transition-colors flex items-center gap-2 shrink-0">
-                      <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.59-9.21l-5.36-2.14"></path></svg>
-                      Zerar
-                    </button>
-                  </div>
-                </div>
-              </div>
+                    <div className="bg-green-500/10 text-green-400 px-3 py-1 rounded-full flex items-center gap-2 text-sm font-medium border border-green-500/20">
+                       <div className="w-2 h-2 rounded-full bg-green-400"></div>
+                       ativo
+                    </div>
+                 </div>
 
-              <div className="border-t border-white/10 pt-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h4 className="font-bold text-white flex items-center gap-2">
-                    <Package className="text-secondary-light" size={18} />
-                    Módulos Liberados
-                  </h4>
-                  <span className="text-xs bg-secondary/20 text-secondary-light px-2 py-1 rounded-full font-bold">
-                    {activeTenantObj.modules?.length || 0} ativos
-                  </span>
-                </div>
-                <p className="text-sm text-gray-400 mb-4">Selecione quais aplicativos (módulos) aparecerão no menu deste cliente quando ele fizer login.</p>
-                
-                <div className="space-y-2">
-                  {modules.map(mod => {
-                    const isEnabled = activeTenantObj.modules?.includes(mod.id);
-                    return (
-                      <div key={mod.id} className={`flex items-center justify-between p-3 rounded-xl border transition-all ${isEnabled ? 'bg-secondary/10 border-secondary/30' : 'bg-black/20 border-white/5 hover:border-white/10'}`}>
-                        <div>
-                          <span className={`font-bold block ${isEnabled ? 'text-white' : 'text-gray-400'}`}>{mod.name}</span>
-                          <span className="text-xs text-gray-500">{mod.category}</span>
-                        </div>
-                        <label className="relative inline-flex items-center cursor-pointer">
-                          <input 
-                            type="checkbox" 
-                            className="sr-only peer" 
-                            checked={isEnabled || false}
-                            onChange={() => toggleTenantModule(activeTenantObj.id, mod.id)}
-                          />
-                          <div className="w-11 h-6 bg-white/10 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
-                        </label>
-                      </div>
-                    )
-                  })}
-                </div>
+                 {/* Module List */}
+                 <div className="divide-y divide-white/5">
+                    {modules.map(mod => {
+                       const isEnabled = activeTenantObj.modules?.includes(mod.id);
+                       return (
+                          <div key={mod.id} className="flex justify-between items-center p-5 hover:bg-white/5 transition-colors">
+                             <span className="text-gray-200 font-medium">{mod.name}</span>
+                             <button 
+                                onClick={() => toggleTenantModule(activeTenantObj.id, mod.id)}
+                                className={`w-12 h-6 rounded-full border-2 flex items-center px-1 transition-colors ${isEnabled ? 'border-secondary' : 'border-gray-600'}`}
+                             >
+                                <div className={`w-3 h-3 rounded-full transition-transform duration-300 ${isEnabled ? 'bg-secondary translate-x-6' : 'bg-gray-600 translate-x-0'}`}></div>
+                             </button>
+                          </div>
+                       )
+                    })}
+                 </div>
+
+                 {/* Consumo Section */}
+                 <div className="p-5 bg-[#151A27] border-t border-white/5">
+                    <h4 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4">
+                       HERMES IA — CONSUMO
+                    </h4>
+                    <div className="flex justify-between items-center mb-2">
+                       <span className="text-sm text-gray-400">6 / 100 msgs</span>
+                       <span className="text-sm font-bold text-secondary-light">6%</span>
+                    </div>
+                    <div className="w-full bg-gray-700/50 rounded-full h-2 mb-4">
+                       <div className="bg-secondary h-2 rounded-full" style={{ width: '6%' }}></div>
+                    </div>
+                    
+                    <div className="flex items-center gap-2 mt-4">
+                       <div className="relative flex-1">
+                          <select className="w-full bg-[#1A2030] border border-white/10 rounded-lg pl-10 pr-8 py-2.5 text-sm focus:outline-none focus:border-secondary text-white appearance-none">
+                             <option>Teste — 100 msgs</option>
+                             <option>Básico — 500 msgs</option>
+                             <option>Pro — 2000 msgs</option>
+                          </select>
+                          <div className="absolute left-3 top-1/2 -translate-y-1/2">
+                             <div className="w-3 h-3 rounded-sm bg-green-400/20 border border-green-400 flex items-center justify-center">
+                               <div className="w-1.5 h-1.5 bg-green-400 rounded-sm"></div>
+                             </div>
+                          </div>
+                          <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none border-l-[4px] border-r-[4px] border-t-[4px] border-l-transparent border-r-transparent border-t-gray-400"></div>
+                       </div>
+                       <button className="bg-[#1A2030] hover:bg-white/10 border border-white/10 text-gray-300 px-4 py-2.5 rounded-lg text-sm transition-colors flex items-center gap-2 shrink-0">
+                          <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.59-9.21l-5.36-2.14"></path></svg>
+                          Zerar
+                       </button>
+                    </div>
+                 </div>
               </div>
             </div>
           </div>

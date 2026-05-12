@@ -37,20 +37,22 @@ interface AdminState {
 
 // Mock data initially. Will be replaced with Supabase calls later.
 const MOCK_MODULES: AppModule[] = [
-  { id: 'core_crm', name: 'CRM & Pipeline', category: 'business', description: 'Gestão de clientes, leads e funil de vendas avançado.', icon: 'Briefcase', is_public: true, active_tenants: 145 },
-  { id: 'core_calendar', name: 'Agenda Global', category: 'productivity', description: 'Calendário compartilhado e agendamento de recursos.', icon: 'Calendar', is_public: true, active_tenants: 210 },
-  { id: 'ai_hermes', name: 'Hermes IA', category: 'core', description: 'Assistente virtual inteligente integrado em todos os módulos.', icon: 'Bot', is_public: true, active_tenants: 89 },
-  { id: 'niche_pastoral', name: 'Agenda Pastoral', category: 'niche', description: 'Gestão completa para igrejas: membros, cultos, células, financeiro.', icon: 'BookOpen', is_public: true, active_tenants: 42 },
-  { id: 'niche_oficina', name: 'Oficina Mecânica', category: 'niche', description: 'Gestão de veículos, OS, estoque e faturamento para mecânicas.', icon: 'Wrench', is_public: true, active_tenants: 15 },
-  { id: 'comm_chat', name: 'Chat Interno', category: 'productivity', description: 'Comunicação em tempo real entre a equipe.', icon: 'MessageSquare', is_public: false, active_tenants: 0 },
+  { id: 'crm', name: 'CRM', category: 'business', description: 'Gestão de clientes, leads e funil de vendas avançado.', icon: 'Briefcase', is_public: true, active_tenants: 145 },
+  { id: 'agenda', name: 'Agenda', category: 'productivity', description: 'Calendário compartilhado e agendamento de recursos.', icon: 'Calendar', is_public: true, active_tenants: 210 },
+  { id: 'kanban', name: 'Kanban', category: 'productivity', description: 'Quadro ágil para projetos.', icon: 'Layout', is_public: true, active_tenants: 89 },
+  { id: 'whatsapp', name: 'WhatsApp', category: 'niche', description: 'Integração direta.', icon: 'MessageCircle', is_public: true, active_tenants: 42 },
+  { id: 'followup', name: 'Follow-up', category: 'niche', description: 'Acompanhamento automático.', icon: 'Activity', is_public: true, active_tenants: 15 },
+  { id: 'ai_hermes', name: 'Hermes IA', category: 'core', description: 'Assistente virtual inteligente.', icon: 'Bot', is_public: true, active_tenants: 89 },
+  { id: 'instagram', name: 'Instagram', category: 'productivity', description: 'Integração Insta.', icon: 'Instagram', is_public: false, active_tenants: 0 },
+  { id: 'youtube', name: 'YouTube', category: 'productivity', description: 'Integração YT.', icon: 'Youtube', is_public: false, active_tenants: 0 },
 ];
 
 const MOCK_TENANTS: Tenant[] = [
-  { id: '1', name: 'Acme Corp', subdomain: 'acme', plan: 'enterprise', status: 'active', users_count: 15, api_calls: 45230, created_at: '2024-01-15T10:00:00Z', modules: ['core_crm', 'core_calendar', 'ai_hermes'] },
-  { id: '2', name: 'Global Tech', subdomain: 'globaltech', plan: 'pro', status: 'active', users_count: 5, api_calls: 12500, created_at: '2024-02-20T14:30:00Z', modules: ['core_crm'] },
-  { id: '3', name: 'Igreja Vida Nova', subdomain: 'igrejavida', plan: 'pro', status: 'active', users_count: 3, api_calls: 8900, created_at: '2025-03-01T09:15:00Z', modules: ['niche_pastoral', 'ai_hermes'] },
-  { id: '4', name: 'Oficina do Zé', subdomain: 'oficinaze', plan: 'starter', status: 'active', users_count: 2, api_calls: 1200, created_at: '2025-04-10T11:00:00Z', modules: ['niche_oficina', 'ai_hermes'] },
-  { id: '5', name: 'Startup Inc', subdomain: 'startup', plan: 'free', status: 'blocked', users_count: 1, api_calls: 100000, created_at: '2024-11-20T08:00:00Z', modules: ['core_calendar'] },
+  { id: '1', name: 'borges', subdomain: 'borges', plan: 'enterprise', status: 'active', users_count: 15, api_calls: 45230, created_at: '2025-01-10', modules: ['ai_hermes'] },
+  { id: '2', name: 'Global Tech', subdomain: 'globaltech', plan: 'pro', status: 'active', users_count: 5, api_calls: 12500, created_at: '2025-02-15', modules: ['crm'] },
+  { id: '3', name: 'Igreja Vida Nova', subdomain: 'igrejavida', plan: 'pro', status: 'active', users_count: 3, api_calls: 8900, created_at: '2025-03-01', modules: ['agenda', 'ai_hermes'] },
+  { id: '4', name: 'Oficina do Zé', subdomain: 'oficinaze', plan: 'pro', status: 'active', users_count: 2, api_calls: 1200, created_at: '2025-04-10', modules: ['crm', 'ai_hermes'] },
+  { id: '5', name: 'Startup Inc', subdomain: 'startup', plan: 'free', status: 'blocked', users_count: 1, api_calls: 100000, created_at: '2024-11-20', modules: ['kanban'] },
 ];
 
 export const useAdminStore = create<AdminState>((set) => ({
