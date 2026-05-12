@@ -1,19 +1,31 @@
 version: '3.8'
 
 services:
-  hermes-saas:
+  backend:
     build:
-      context: .
+      context: ./backend
       dockerfile: Dockerfile
-    image: hermes-saas:latest
-    container_name: hermes-saas
+    container_name: hermes-backend
     ports:
-      - "3000:80"
+      - "3333:3333"
     environment:
       - NODE_ENV=production
     restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:alpine
+    container_name: hermes-redis
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+
+  # evolution-api:
+  #   image: atendai/evolution-api:latest
+  #   ... (configuração da evolution api)
+
+volumes:
+  redis_data:
