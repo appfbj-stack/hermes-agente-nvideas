@@ -30,10 +30,14 @@ const ProtectedRoute = ({ children, allowedRole }: { children: React.ReactNode, 
     return <Navigate to="/auth" state={{ from: location.pathname }} replace />;
   }
 
+  // DESATIVADO TEMPORARIAMENTE PARA DEMONSTRAÇÃO:
+  // Permite que qualquer usuário teste tanto a visão de Tenant quanto a visão de SuperAdmin.
+  /*
   if (allowedRole && role !== allowedRole) {
     // Redirect to their appropriate dashboard if they try to access the wrong one
     return <Navigate to={role === 'superadmin' ? '/admin' : '/t'} replace />;
   }
+  */
 
   return <>{children}</>;
 };
