@@ -40,6 +40,7 @@ export const OficinaMecanica: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabType>('dashboard');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalType, setModalType] = useState<TabType | null>(null);
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   const openModal = (type: TabType) => {
     setModalType(type);
@@ -188,6 +189,26 @@ export const OficinaMecanica: React.FC = () => {
         )}
       </div>
 
+      {/* Hermes AI Assistant Banner (Global for Oficina) */}
+      <div className="glass-panel p-4 rounded-xl border border-secondary/30 bg-secondary/5 flex flex-col sm:flex-row sm:items-center gap-4 relative overflow-hidden shrink-0">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-secondary/20 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2"></div>
+        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-secondary to-accent flex items-center justify-center shadow-lg shadow-secondary/20 shrink-0 relative z-10">
+          <Bot size={20} className="text-white" />
+        </div>
+        <div className="flex-1 relative z-10">
+          <h4 className="font-bold text-white flex items-center gap-2">
+            Hermes IA <Sparkles size={14} className="text-secondary-light" />
+          </h4>
+          <p className="text-sm text-gray-300 mt-1">O Hermes identificou que você tem 3 Orçamentos aguardando aprovação e o estoque de Pastilhas de Freio está baixo.</p>
+        </div>
+        <button 
+          onClick={() => setIsChatOpen(true)}
+          className="px-4 py-2 bg-secondary hover:bg-secondary-light text-white text-sm font-medium rounded-lg transition-colors shadow-lg shadow-secondary/20 relative z-10 whitespace-nowrap"
+        >
+          Ver Insights
+        </button>
+      </div>
+
       {/* Tabs */}
       <div className="flex border-b border-white/10 gap-4 sm:gap-6 overflow-x-auto custom-scrollbar pb-1 shrink-0 -mx-2 px-2 sm:mx-0 sm:px-0">
         {TABS.map(tab => (
@@ -221,25 +242,63 @@ export const OficinaMecanica: React.FC = () => {
       )}
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto overflow-x-hidden pr-1 sm:pr-2 custom-scrollbar min-h-0">
+      <div className="flex-1 overflow-y-auto overflow-x-hidden pr-1 sm:pr-2 custom-scrollbar min-h-0 relative">
         
-        {activeTab === 'dashboard' && (
-          <div className="space-y-4">
-            <div className="glass-panel p-4 rounded-xl border border-secondary/30 bg-secondary/5 flex flex-col sm:flex-row sm:items-center gap-4 relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-secondary/20 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2"></div>
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-secondary to-accent flex items-center justify-center shadow-lg shadow-secondary/20 shrink-0 relative z-10">
-                <Bot size={20} className="text-white" />
+        {/* Full Chat Overlay - Absolute positioned over content when open */}
+        {isChatOpen && (
+          <div className="absolute inset-0 z-20 bg-black/90 backdrop-blur-sm rounded-2xl border border-secondary/30 flex flex-col overflow-hidden animate-fade-in-up">
+            <div className="p-4 border-b border-white/10 flex justify-between items-center bg-secondary/10">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-secondary to-accent flex items-center justify-center shadow-lg shadow-secondary/20">
+                  <Bot size={20} className="text-white" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-white flex items-center gap-2">
+                    Hermes IA <Sparkles size={14} className="text-secondary-light" />
+                  </h3>
+                  <p className="text-xs text-gray-400">Assistente da Oficina</p>
+                </div>
               </div>
-              <div className="flex-1 relative z-10">
-                <h4 className="font-bold text-white flex items-center gap-2">
-                  Hermes IA <Sparkles size={14} className="text-secondary-light" />
-                </h4>
-                <p className="text-sm text-gray-300 mt-1">O Hermes identificou que você tem 3 Orçamentos aguardando aprovação e o estoque de Pastilhas de Freio está baixo.</p>
-              </div>
-              <button className="px-4 py-2 bg-secondary hover:bg-secondary-light text-white text-sm font-medium rounded-lg transition-colors shadow-lg shadow-secondary/20 relative z-10 whitespace-nowrap">
-                Ver Insights
+              <button 
+                onClick={() => setIsChatOpen(false)}
+                className="p-2 text-gray-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+              >
+                <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
               </button>
             </div>
+            
+            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+              <div className="flex gap-3">
+                <div className="w-8 h-8 rounded-full bg-secondary/20 flex items-center justify-center shrink-0">
+                  <Bot size={16} className="text-secondary-light" />
+                </div>
+                <div className="bg-white/5 border border-white/10 rounded-2xl rounded-tl-none p-4 max-w-[80%]">
+                  <p className="text-sm text-gray-200">
+                    Olá! Eu sou o Hermes. Analisei sua oficina hoje e notei que os orçamentos de João da Silva e Maria Oliveira estão aguardando aprovação há mais de 2 dias. Além disso, o estoque de Pastilhas de Freio está abaixo do mínimo.
+                    <br/><br/>
+                    Quer que eu envie uma mensagem de WhatsApp de lembrete para os clientes ou prepare um pedido de compra para as pastilhas?
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-4 border-t border-white/10 bg-black/20">
+              <div className="relative">
+                <input 
+                  type="text" 
+                  placeholder="Peça ao Hermes para criar um orçamento, buscar uma placa ou enviar mensagem..."
+                  className="w-full bg-white/5 border border-white/10 rounded-xl pl-4 pr-12 py-3 text-sm focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary/50 text-white"
+                />
+                <button className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-secondary hover:bg-secondary-light text-white rounded-lg transition-colors">
+                  <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'dashboard' && (
+          <div className="space-y-4">
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
                <div className="glass-panel p-6 rounded-2xl border border-white/5">
