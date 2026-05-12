@@ -1,5 +1,9 @@
 import fastify from 'fastify';
 import cors from '@fastify/cors';
+import dotenv from 'dotenv';
+import tenantRoutes from './routes/tenantRoutes';
+
+dotenv.config();
 
 const app = fastify({ logger: true });
 
@@ -7,14 +11,18 @@ app.register(cors, {
   origin: '*'
 });
 
+// Registrar rotas
+app.register(tenantRoutes, { prefix: '/api/tenants' });
+
 app.get('/health', async (request, reply) => {
-  return { status: 'ok', service: 'hermes-saas-backend' };
+  return { status: 'ok', service: 'hermes-saas-backend', timestamp: new Date() };
 });
 
 const start = async () => {
   try {
-    await app.listen({ port: 3333, host: '0.0.0.0' });
-    console.log('Backend running on port 3333');
+    const port = Number(process.env.PORT) || 3333;
+    await app.listen({ port, host: '0.0.0.0' });
+    console.log(`🚀 Backend running on port ${port}`);
   } catch (err) {
     app.log.error(err);
     process.exit(1);
