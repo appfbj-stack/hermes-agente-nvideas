@@ -16,9 +16,11 @@
     "@fastify/cors": "^11.2.0",
     "@supabase/supabase-js": "^2.105.4",
     "axios": "^1.16.0",
+    "bullmq": "^5.76.8",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "fastify": "^5.8.5",
+    "ioredis": "^5.10.1",
     "openai": "^6.37.0"
   },
   "devDependencies": {
