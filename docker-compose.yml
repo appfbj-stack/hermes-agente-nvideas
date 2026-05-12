@@ -37,6 +37,18 @@ services:
     depends_on:
       - redis
 
+  workers:
+    build:
+      context: ./workers
+      dockerfile: Dockerfile
+    container_name: hermes-workers
+    environment:
+      - NODE_ENV=production
+      - REDIS_URL=redis://redis:6379
+    restart: unless-stopped
+    depends_on:
+      - redis
+
   # evolution-api:
   #   image: atendai/evolution-api:latest
   #   ... (configuração da evolution api)
