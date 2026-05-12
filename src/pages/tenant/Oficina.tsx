@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
 import { 
-  Wrench, Users, Car, ClipboardList, DollarSign, Package, Calendar, Bot, Sparkles, LayoutDashboard, Plus, Search, Filter, X, Edit2, Trash2
+  Wrench, Users, Car, ClipboardList, DollarSign, Package, Calendar, Bot, Sparkles, LayoutDashboard, Plus, Search, Filter, X, Edit2, Trash2, Briefcase, Activity
 } from 'lucide-react';
 
-type TabType = 'dashboard' | 'clientes' | 'veiculos' | 'os' | 'financeiro' | 'estoque' | 'agenda';
+type TabType = 'dashboard' | 'clientes' | 'veiculos' | 'os' | 'financeiro' | 'estoque' | 'agenda' | 'crm' | 'followup';
 
 const TABS: { id: TabType, label: string, icon: any }[] = [
   { id: 'dashboard', label: 'Visão Geral', icon: LayoutDashboard },
   { id: 'clientes', label: 'Clientes', icon: Users },
   { id: 'veiculos', label: 'Veículos', icon: Car },
   { id: 'os', label: 'Ordens de Serviço', icon: ClipboardList },
-  { id: 'financeiro', label: 'Financeiro', icon: DollarSign },
   { id: 'estoque', label: 'Estoque', icon: Package },
+  { id: 'crm', label: 'CRM / Vendas', icon: Briefcase },
+  { id: 'followup', label: 'Follow-up', icon: Activity },
+  { id: 'financeiro', label: 'Financeiro', icon: DollarSign },
   { id: 'agenda', label: 'Agenda', icon: Calendar },
 ];
 
@@ -34,6 +36,16 @@ const MOCK_OS = [
 const MOCK_ESTOQUE = [
   { id: 1, codigo: 'P-001', peca: 'Pastilha de Freio', qtd: 4, custo: 'R$ 45,00', venda: 'R$ 120,00' },
   { id: 2, codigo: 'O-005', peca: 'Óleo Sintético 5W30', qtd: 24, custo: 'R$ 25,00', venda: 'R$ 60,00' },
+];
+
+const MOCK_CRM = [
+  { id: 1, cliente: 'Roberto Alves', veiculo: 'Ford Fiesta', status: 'Novo Lead', valor: 'R$ 1.200', probabilidade: 'Alta' },
+  { id: 2, cliente: 'Ana Paula', veiculo: 'Chevrolet Onix', status: 'Em Negociação', valor: 'R$ 3.500', probabilidade: 'Média' }
+];
+
+const MOCK_FOLLOWUP = [
+  { id: 1, cliente: 'João da Silva', motivo: 'Aprovação de Orçamento OS #1002', data: 'Hoje', canal: 'WhatsApp', status: 'Pendente' },
+  { id: 2, cliente: 'Marcos Silva', motivo: 'Revisão de 10.000km', data: 'Amanhã', canal: 'Telefone', status: 'Agendado' }
 ];
 
 export const OficinaMecanica: React.FC = () => {
@@ -225,7 +237,7 @@ export const OficinaMecanica: React.FC = () => {
       </div>
 
       {/* Search Bar for list views */}
-      {['clientes', 'veiculos', 'os', 'estoque'].includes(activeTab) && (
+      {['clientes', 'veiculos', 'os', 'estoque', 'crm', 'followup'].includes(activeTab) && (
         <div className="glass-panel rounded-xl p-3 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 bg-black/20 shrink-0">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
@@ -439,6 +451,84 @@ export const OficinaMecanica: React.FC = () => {
                     <td className="p-4">{item.custo}</td>
                     <td className="p-4">{item.venda}</td>
                     <td className="p-4 flex gap-2">
+                      <button className="p-1.5 text-gray-400 hover:text-white hover:bg-white/10 rounded"><Edit2 size={14}/></button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {activeTab === 'crm' && (
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 h-full min-h-[400px]">
+            {['Novo Lead', 'Contato Feito', 'Em Negociação', 'Ganho'].map((coluna) => (
+              <div key={coluna} className="bg-white/5 rounded-2xl p-4 flex flex-col gap-3">
+                <div className="flex justify-between items-center mb-2">
+                  <h4 className="font-bold text-white text-sm">{coluna}</h4>
+                  <span className="text-xs bg-black/30 px-2 py-1 rounded-full text-gray-400 border border-white/5">
+                    {MOCK_CRM.filter(c => c.status === coluna || (coluna === 'Novo Lead' && c.status === 'Novo Lead')).length}
+                  </span>
+                </div>
+                
+                {MOCK_CRM.filter(c => c.status === coluna || (coluna === 'Novo Lead' && c.status === 'Novo Lead')).map(lead => (
+                  <div key={lead.id} className="bg-black/40 border border-white/5 p-4 rounded-xl cursor-grab hover:border-secondary/30 transition-colors">
+                    <h5 className="font-bold text-white text-sm">{lead.cliente}</h5>
+                    <p className="text-xs text-gray-400 mt-1 flex items-center gap-1"><Car size={12}/> {lead.veiculo}</p>
+                    <div className="flex justify-between items-center mt-3 pt-3 border-t border-white/5">
+                      <span className="text-secondary-light font-bold text-sm">{lead.valor}</span>
+                      <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${
+                        lead.probabilidade === 'Alta' ? 'bg-green-500/10 text-green-400' : 'bg-yellow-500/10 text-yellow-400'
+                      }`}>
+                        {lead.probabilidade}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+                
+                <button className="w-full py-2 border border-dashed border-white/10 rounded-xl text-gray-400 text-sm hover:text-white hover:border-white/30 hover:bg-white/5 transition-all mt-auto">
+                  + Adicionar Lead
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {activeTab === 'followup' && (
+          <div className="glass-panel rounded-2xl border border-white/5 overflow-hidden">
+            <table className="w-full text-left text-sm text-gray-300">
+              <thead className="bg-white/5 text-gray-400 font-medium">
+                <tr>
+                  <th className="p-4">Data</th>
+                  <th className="p-4">Cliente</th>
+                  <th className="p-4">Motivo / Ação</th>
+                  <th className="p-4">Canal</th>
+                  <th className="p-4">Status</th>
+                  <th className="p-4">Ações</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-white/5">
+                {MOCK_FOLLOWUP.map(f => (
+                  <tr key={f.id} className="hover:bg-white/5 transition-colors">
+                    <td className="p-4 text-white font-medium">{f.data}</td>
+                    <td className="p-4 font-medium">{f.cliente}</td>
+                    <td className="p-4">{f.motivo}</td>
+                    <td className="p-4">
+                      <span className={`flex items-center gap-1 text-xs px-2 py-1 rounded-full w-max ${
+                        f.canal === 'WhatsApp' ? 'bg-green-500/10 text-green-400 border border-green-500/20' : 'bg-blue-500/10 text-blue-400 border border-blue-500/20'
+                      }`}>
+                        {f.canal}
+                      </span>
+                    </td>
+                    <td className="p-4">
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                        f.status === 'Pendente' ? 'bg-yellow-500/10 text-yellow-400' : 'bg-green-500/10 text-green-400'
+                      }`}>
+                        {f.status}
+                      </span>
+                    </td>
+                    <td className="p-4 flex gap-2">
+                      <button className="p-1.5 text-gray-400 hover:text-green-400 hover:bg-green-400/10 rounded" title="Marcar como Feito"><Activity size={14}/></button>
                       <button className="p-1.5 text-gray-400 hover:text-white hover:bg-white/10 rounded"><Edit2 size={14}/></button>
                     </td>
                   </tr>
