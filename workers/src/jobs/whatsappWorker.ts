@@ -1,17 +1,29 @@
 import { Worker } from 'bullmq';
 import { connection } from '../utils/redis';
+// Simula a injeção do axios para não precisar importar todo o backend aqui
+import axios from 'axios';
 
 export const startWhatsAppWorker = () => {
   const worker = new Worker(
     'whatsapp-messages',
     async (job) => {
       console.log(`[WhatsApp Worker] Processando Job ${job.id}:`, job.data);
-      // Aqui vamos integrar com o WhatsAppFactory do backend depois
+      const { tenantId, to, text } = job.data;
       
-      // Simula um processamento demorado (envio de mensagem)
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Chama o endpoint local do backend que já implementa a lógica do Uazap
+      const backendUrl = process.env.BACKEND_URL || 'http://localhost:3333';
       
-      console.log(`[WhatsApp Worker] Job ${job.id} concluído!`);
+      try {
+        await axios.post(`${backendUrl}/api/whatsapp/send`, {
+          tenantId,
+          to,
+          text
+        });
+        console.log(`[WhatsApp Worker] Job ${job.id} concluído com sucesso via Uazap!`);
+      } catch (error: any) {
+        console.error(`[WhatsApp Worker] Falha ao enviar mensagem:`, error.message);
+        throw error;
+      }
     },
     { connection }
   );

@@ -2,6 +2,7 @@ import fastify from 'fastify';
 import cors from '@fastify/cors';
 import dotenv from 'dotenv';
 import tenantRoutes from './routes/tenantRoutes';
+import whatsappRoutes from './routes/whatsappRoutes';
 
 dotenv.config();
 
@@ -13,6 +14,7 @@ app.register(cors, {
 
 // Registrar rotas
 app.register(tenantRoutes, { prefix: '/api/tenants' });
+app.register(whatsappRoutes, { prefix: '/api/whatsapp' });
 
 app.get('/health', async (request, reply) => {
   return { status: 'ok', service: 'hermes-saas-backend', timestamp: new Date() };
