@@ -39,6 +39,7 @@ interface AdminState {
 const MOCK_MODULES: AppModule[] = [
   { id: 'crm', name: 'CRM', category: 'business', description: 'Gestão de clientes, leads e funil de vendas avançado.', icon: 'Briefcase', is_public: true, active_tenants: 145 },
   { id: 'agenda', name: 'Agenda', category: 'productivity', description: 'Calendário compartilhado e agendamento de recursos.', icon: 'Calendar', is_public: true, active_tenants: 210 },
+  { id: 'biblia', name: 'Bíblia', category: 'niche', description: 'Bíblia completa com recursos de estudo e IA.', icon: 'BookOpen', is_public: true, active_tenants: 10 },
   { id: 'kanban', name: 'Kanban', category: 'productivity', description: 'Quadro ágil para projetos.', icon: 'Layout', is_public: true, active_tenants: 89 },
   { id: 'whatsapp', name: 'WhatsApp', category: 'niche', description: 'Integração direta.', icon: 'MessageCircle', is_public: true, active_tenants: 42 },
   { id: 'followup', name: 'Follow-up', category: 'niche', description: 'Acompanhamento automático.', icon: 'Activity', is_public: true, active_tenants: 15 },

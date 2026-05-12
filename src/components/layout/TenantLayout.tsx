@@ -23,6 +23,7 @@ const SIDEBAR_LINKS = [
   { name: 'Agenda', path: '/t/calendar', icon: Calendar },
   { name: 'CRM', path: '/t/crm', icon: Briefcase },
   { name: 'Agenda Pastoral', path: '/t/pastoral', icon: BookOpen },
+  { name: 'Bíblia', path: '/t/biblia', icon: BookOpen },
   { name: 'Oficina Mecânica', path: '/t/oficina', icon: Wrench },
   { name: 'Configurações', path: '/t/settings', icon: Settings },
   { name: 'Admin Master', path: '/admin/tenants', icon: Shield },
