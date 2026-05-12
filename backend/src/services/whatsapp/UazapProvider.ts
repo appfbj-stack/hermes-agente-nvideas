@@ -3,25 +3,26 @@ import { IWhatsAppProvider, SendMediaParams, SendMessageParams } from './IWhatsA
 
 export class UazapWhatsAppProvider implements IWhatsAppProvider {
   private apiUrl: string;
-  private apiKey: string;
+  private apiToken: string;
 
   constructor() {
     this.apiUrl = process.env.UAZAP_API_URL || '';
-    this.apiKey = process.env.UAZAP_API_KEY || '';
+    // Aqui usamos o token global da instância para os disparos
+    this.apiToken = process.env.UAZAP_API_KEY || '';
 
-    if (!this.apiUrl || !this.apiKey) {
+    if (!this.apiUrl || !this.apiToken) {
       console.warn('⚠️ Uazap credentials not fully configured in environment variables.');
     }
   }
 
   /**
-   * Inicializa ou recupera o status da sessão do Tenant no Uazap
+   * Inicializa ou recupera o status da sessão
    */
   async getSessionStatus(tenantId: string): Promise<any> {
     try {
-      const response = await axios.get(`${this.apiUrl}/instance/status/${tenantId}`, {
+      const response = await axios.get(`${this.apiUrl}/instance/status`, {
         headers: {
-          'apikey': this.apiKey,
+          'token': this.apiToken,
         },
       });
       return response.data;
@@ -36,18 +37,13 @@ export class UazapWhatsAppProvider implements IWhatsAppProvider {
    */
   async sendMessage(params: SendMessageParams): Promise<any> {
     try {
-      const response = await axios.post(`${this.apiUrl}/message/sendText/${params.tenantId}`, {
+      const response = await axios.post(`${this.apiUrl}/send/text`, {
         number: params.to,
-        options: {
-          delay: 1200,
-          presence: 'composing'
-        },
-        textMessage: {
-          text: params.text
-        }
+        text: params.text,
+        delay: 1200
       }, {
         headers: {
-          'apikey': this.apiKey,
+          'token': this.apiToken,
           'Content-Type': 'application/json'
         }
       });
@@ -63,20 +59,14 @@ export class UazapWhatsAppProvider implements IWhatsAppProvider {
    */
   async sendMedia(params: SendMediaParams): Promise<any> {
     try {
-      const response = await axios.post(`${this.apiUrl}/message/sendMedia/${params.tenantId}`, {
+      const response = await axios.post(`${this.apiUrl}/send/media`, {
         number: params.to,
-        options: {
-          delay: 1200,
-          presence: 'composing'
-        },
-        mediaMessage: {
-          mediatype: 'document', // Pode precisar de ajuste dinâmico com base na extensão
-          caption: params.caption,
-          media: params.mediaUrl
-        }
+        media: params.mediaUrl,
+        caption: params.caption,
+        delay: 1200
       }, {
         headers: {
-          'apikey': this.apiKey,
+          'token': this.apiToken,
           'Content-Type': 'application/json'
         }
       });
@@ -92,10 +82,9 @@ export class UazapWhatsAppProvider implements IWhatsAppProvider {
    */
   async registerWebhook(tenantId: string, webhookUrl: string): Promise<any> {
     try {
-      const response = await axios.post(`${this.apiUrl}/webhook/set/${tenantId}`, {
+      const response = await axios.post(`${this.apiUrl}/webhook/set`, {
         enabled: true,
         url: webhookUrl,
-        webhookBase64: false,
         events: [
           "MESSAGES_UPSERT",
           "MESSAGES_UPDATE",
@@ -103,7 +92,7 @@ export class UazapWhatsAppProvider implements IWhatsAppProvider {
         ]
       }, {
         headers: {
-          'apikey': this.apiKey,
+          'token': this.apiToken,
           'Content-Type': 'application/json'
         }
       });
