@@ -1,9 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, Bot, User, Paperclip, MoreVertical, Sparkles, MessageSquare, Phone } from 'lucide-react';
 import { generateChatResponse, ChatMessage } from '../../lib/openrouter';
+import { WhatsAppClone } from '../../components/whatsapp/WhatsAppClone';
 
 export const HermesChat: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'hermes' | 'whatsapp'>('hermes');
+  const [activeTab, setActiveTab] = useState<'hermes' | 'whatsapp'>('whatsapp');
   
   // Hermes AI State
   const [messages, setMessages] = useState<ChatMessage[]>([
@@ -12,11 +13,6 @@ export const HermesChat: React.FC = () => {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  // WhatsApp State
-  const [waNumber, setWaNumber] = useState('');
-  const [waMessage, setWaMessage] = useState('');
-  const [waStatus, setWaStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -56,49 +52,10 @@ export const HermesChat: React.FC = () => {
     }
   };
 
-  const handleSendWhatsApp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!waNumber.trim() || !waMessage.trim() || waStatus === 'sending') return;
-
-    setWaStatus('sending');
-
-    try {
-      // Endpoint local do Backend que aciona a Factory (Uazap) ou enfileira no BullMQ
-      // Estamos simulando a chamada caso não exista no momento para UI/UX
-      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3333';
-      
-      // Assumindo tenant_id fixo para exemplo, deve vir do AuthContext
-      const tenantId = 'tenant_demo_123'; 
-
-      const response = await fetch(`${backendUrl}/api/whatsapp/send`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          tenantId,
-          to: waNumber,
-          text: waMessage
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error('Falha ao enviar mensagem');
-      }
-
-      setWaStatus('success');
-      setWaMessage('');
-      
-      setTimeout(() => setWaStatus('idle'), 3000);
-    } catch (error) {
-      console.error('Erro ao enviar whatsapp:', error);
-      setWaStatus('error');
-      setTimeout(() => setWaStatus('idle'), 4000);
-    }
-  };
-
   return (
     <div className="flex flex-col h-full bg-primary/50 relative">
       {/* Tabs Header */}
-      <div className="glass-panel border-b border-white/10 px-6 py-4 flex flex-col md:flex-row justify-between items-center gap-4 z-10">
+      <div className="glass-panel border-b border-white/10 px-6 py-4 flex flex-col md:flex-row justify-between items-center gap-4 z-10 shrink-0">
         <div className="flex bg-primary p-1 rounded-xl border border-white/5">
           <button
             onClick={() => setActiveTab('hermes')}
@@ -120,7 +77,7 @@ export const HermesChat: React.FC = () => {
             }`}
           >
             <MessageSquare size={18} />
-            <span className="font-medium">Disparo WhatsApp</span>
+            <span className="font-medium">Atendimento (WhatsApp)</span>
           </button>
         </div>
 
@@ -181,7 +138,7 @@ export const HermesChat: React.FC = () => {
           </div>
 
           {/* Input Area - Hermes */}
-          <div className="p-6 bg-gradient-to-t from-primary via-primary to-transparent z-10">
+          <div className="p-6 bg-gradient-to-t from-primary via-primary to-transparent z-10 shrink-0">
             <div className="max-w-4xl mx-auto">
               <form onSubmit={handleSendHermes} className="glass-panel rounded-2xl p-2 flex items-end gap-2 border-white/20 focus-within:border-secondary/50 focus-within:shadow-[0_0_20px_rgba(123,104,238,0.15)] transition-all">
                 <button type="button" className="p-3 text-gray-400 hover:text-white rounded-xl hover:bg-white/5 transition-colors shrink-0">
@@ -217,80 +174,10 @@ export const HermesChat: React.FC = () => {
           </div>
         </>
       ) : (
-        /* Disparo WhatsApp Area */
-        <div className="flex-1 flex items-center justify-center p-6 overflow-y-auto">
-          <div className="glass-panel max-w-xl w-full rounded-2xl p-8 border-white/10">
-            <div className="text-center mb-8">
-              <div className="w-16 h-16 rounded-full bg-green-500/20 border border-green-500/30 flex items-center justify-center mx-auto mb-4">
-                <MessageSquare size={32} className="text-green-400" />
-              </div>
-              <h3 className="text-2xl font-bold text-white mb-2">Disparo Avulso (WhatsApp)</h3>
-              <p className="text-gray-400 text-sm">
-                Envie mensagens diretamente para qualquer número de WhatsApp utilizando a Uazap API processada pelos nossos Workers.
-              </p>
-            </div>
-
-            <form onSubmit={handleSendWhatsApp} className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Número do Cliente (com DDI e DDD)
-                </label>
-                <div className="relative">
-                  <Phone className="absolute left-4 top-3.5 text-gray-500" size={20} />
-                  <input
-                    type="text"
-                    placeholder="Ex: 5511999999999"
-                    value={waNumber}
-                    onChange={(e) => setWaNumber(e.target.value.replace(/\D/g, ''))}
-                    className="w-full bg-primary/50 border border-white/10 rounded-xl py-3 pl-12 pr-4 text-white focus:outline-none focus:border-green-500/50 focus:ring-1 focus:ring-green-500/50 transition-all"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Mensagem
-                </label>
-                <textarea
-                  placeholder="Escreva a mensagem aqui..."
-                  value={waMessage}
-                  onChange={(e) => setWaMessage(e.target.value)}
-                  className="w-full bg-primary/50 border border-white/10 rounded-xl p-4 text-white focus:outline-none focus:border-green-500/50 focus:ring-1 focus:ring-green-500/50 transition-all resize-none min-h-[120px]"
-                  required
-                />
-              </div>
-
-              <button
-                type="submit"
-                disabled={waStatus === 'sending' || !waNumber || !waMessage}
-                className={`w-full py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all ${
-                  waStatus === 'sending' 
-                    ? 'bg-green-600/50 text-white/50 cursor-wait' 
-                    : waStatus === 'success'
-                    ? 'bg-emerald-500 text-white'
-                    : waStatus === 'error'
-                    ? 'bg-red-500 text-white'
-                    : 'bg-green-600 hover:bg-green-500 text-white shadow-lg shadow-green-600/20'
-                }`}
-              >
-                {waStatus === 'sending' ? (
-                  <>
-                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                    Enviando via Worker...
-                  </>
-                ) : waStatus === 'success' ? (
-                  'Mensagem Enviada!'
-                ) : waStatus === 'error' ? (
-                  'Erro ao Enviar. Tente Novamente.'
-                ) : (
-                  <>
-                    <Send size={20} />
-                    Disparar Mensagem
-                  </>
-                )}
-              </button>
-            </form>
+        /* Disparo WhatsApp Area (Clone do WhatsApp Web) */
+        <div className="flex-1 p-2 md:p-4 lg:p-6 overflow-hidden flex justify-center items-center">
+          <div className="w-full max-w-7xl h-[calc(100vh-140px)] min-h-[600px]">
+            <WhatsAppClone />
           </div>
         </div>
       )}
