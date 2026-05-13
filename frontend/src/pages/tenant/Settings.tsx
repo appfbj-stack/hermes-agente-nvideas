@@ -1,19 +1,29 @@
 import React, { useState } from 'react';
-import { Save, Building, Globe, CreditCard, Users, Shield, Plus, Check } from 'lucide-react';
+import { Save, Building, Globe, CreditCard, Users, Shield, Plus, Check, Smartphone, QrCode } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 
 export const TenantSettings: React.FC = () => {
-  const { user } = useAuthStore();
+  const { user, tenantId } = useAuthStore();
   const [activeTab, setActiveTab] = useState('Geral');
   const [isSaving, setIsSaving] = useState(false);
+  const [waStatus, setWaStatus] = useState<'disconnected' | 'connecting' | 'connected'>('disconnected');
 
   const handleSave = () => {
     setIsSaving(true);
     setTimeout(() => setIsSaving(false), 1000);
   };
 
+  const handleConnectWhatsApp = () => {
+    setWaStatus('connecting');
+    // Simula tempo de leitura de QR Code para demonstração UI
+    setTimeout(() => {
+      setWaStatus('connected');
+    }, 3000);
+  };
+
   const TABS = [
     { name: 'Geral', icon: Building },
+    { name: 'WhatsApp', icon: Smartphone },
     { name: 'Domínio', icon: Globe },
     { name: 'Faturamento', icon: CreditCard },
     { name: 'Equipe', icon: Users },
@@ -125,6 +135,83 @@ export const TenantSettings: React.FC = () => {
                 </div>
               </div>
             </>
+          )}
+
+          {activeTab === 'WhatsApp' && (
+            <div className="glass-panel p-4 sm:p-6 lg:p-8 rounded-2xl space-y-6">
+              <h3 className="text-lg font-bold mb-4 border-b border-white/10 pb-4">Conexão do WhatsApp (Uazapi)</h3>
+              <p className="text-gray-300 text-sm mb-4">
+                Conecte o seu número de WhatsApp escaneando o QR Code abaixo. Essa conexão é única e exclusiva para o seu painel.
+              </p>
+              
+              <div className="bg-black/30 border border-white/10 p-6 rounded-xl text-center max-w-md mx-auto">
+                {waStatus === 'disconnected' ? (
+                  <>
+                    <div className="w-24 h-24 bg-white/5 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-white/10">
+                      <QrCode size={48} className="text-gray-400" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-white mb-2">Dispositivo Desconectado</h3>
+                    <p className="text-gray-400 text-sm mb-6">
+                      Clique no botão abaixo para solicitar uma nova sessão e gerar o QR Code.
+                    </p>
+                    <button 
+                      onClick={handleConnectWhatsApp}
+                      className="bg-green-600 hover:bg-green-500 text-white px-6 py-3 rounded-xl font-medium transition-colors shadow-lg shadow-green-600/20 w-full"
+                    >
+                      Gerar QR Code
+                    </button>
+                  </>
+                ) : waStatus === 'connecting' ? (
+                  <>
+                    <div className="w-48 h-48 bg-white/10 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-white/20 animate-pulse">
+                      <QrCode size={120} className="text-gray-500 opacity-50" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-white mb-2">Aguardando Leitura...</h3>
+                    <p className="text-gray-400 text-sm mb-4">
+                      Abra o WhatsApp no seu celular, vá em "Aparelhos Conectados" e escaneie.
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <div className="w-24 h-24 bg-green-500/20 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-green-500/30">
+                      <Smartphone size={48} className="text-green-400" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-white mb-2">WhatsApp Conectado!</h3>
+                    <p className="text-green-400 text-sm mb-6 font-medium">
+                      Instância ativa e pronta para enviar/receber mensagens.
+                    </p>
+                    <button 
+                      onClick={() => setWaStatus('disconnected')}
+                      className="bg-red-500/10 hover:bg-red-500/20 text-red-400 px-6 py-2 rounded-xl font-medium transition-colors border border-red-500/20 w-full"
+                    >
+                      Desconectar
+                    </button>
+                  </>
+                )}
+              </div>
+
+              {waStatus === 'connected' && (
+                <div className="bg-primary-light/50 border border-white/5 rounded-xl p-5 mt-6">
+                  <h4 className="font-medium text-white flex items-center gap-2 mb-3">
+                    Configurações da Sessão
+                  </h4>
+                  <div className="space-y-3 text-sm">
+                    <div className="flex justify-between border-b border-white/5 pb-2">
+                      <span className="text-gray-400">ID do Tenant</span>
+                      <span className="text-gray-300 font-mono">{tenantId || 'demo_123'}</span>
+                    </div>
+                    <div className="flex justify-between border-b border-white/5 pb-2">
+                      <span className="text-gray-400">Status do Webhook</span>
+                      <span className="text-green-400">Ativo</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">IA Hermes</span>
+                      <span className="text-secondary-light">Monitorando</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
           )}
 
           {activeTab === 'Domínio' && (

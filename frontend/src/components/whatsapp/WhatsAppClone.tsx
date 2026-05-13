@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Search, MoreVertical, Paperclip, Smile, Mic, Send, Check, CheckCheck, User } from 'lucide-react';
+import { useAuthStore } from '../../store/authStore';
 
 interface Contact {
   id: string;
@@ -38,6 +39,7 @@ const MOCK_MESSAGES: Record<string, WAMessage[]> = {
 };
 
 export const WhatsAppClone: React.FC = () => {
+  const { tenantId } = useAuthStore();
   const [contacts, setContacts] = useState<Contact[]>(MOCK_CONTACTS);
   const [selectedContactId, setSelectedContactId] = useState<string | null>(null);
   const [messages, setMessages] = useState<Record<string, WAMessage[]>>(MOCK_MESSAGES);
@@ -88,14 +90,13 @@ export const WhatsAppClone: React.FC = () => {
 
     try {
       const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3333';
-      const tenantId = 'tenant_demo_123'; // Mock tenant
-
-      // Call Backend to send via Uazap
+      
+      // Call Backend to send via Uazap using the real tenantId
       await fetch(`${backendUrl}/api/whatsapp/send`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          tenantId,
+          tenantId: tenantId || 'tenant_demo_123',
           to: selectedContact.phone,
           text: textToSend
         })
