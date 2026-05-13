@@ -153,7 +153,7 @@ export const TenantDashboard: React.FC = () => {
               <ArrowRight size={18} className="text-gray-600 group-hover:text-white transition-colors" />
             </Link>
 
-            {appModule === 'oficina' && (
+            {(appModule === 'oficina' || appModule === 'geral') && (
               <Link to="/t/oficina" className="glass-panel p-5 rounded-2xl flex items-start gap-4 hover:border-white/20 transition-all group">
                 <div className="p-3 rounded-xl bg-orange-500/20 text-orange-400">
                   <Wrench size={24} />
@@ -166,7 +166,7 @@ export const TenantDashboard: React.FC = () => {
               </Link>
             )}
 
-            {appModule === 'igreja' && (
+            {(appModule === 'igreja' || appModule === 'geral') && (
               <Link to="/t/pastoral" className="glass-panel p-5 rounded-2xl flex items-start gap-4 hover:border-white/20 transition-all group">
                 <div className="p-3 rounded-xl bg-purple-500/20 text-purple-400">
                   <BookOpen size={24} />
@@ -197,7 +197,7 @@ export const TenantDashboard: React.FC = () => {
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 h-full overflow-y-auto">
-      {appModule === 'politica' || role === 'superadmin' ? renderPolitica() : renderGenerico()}
+      {appModule === 'politica' ? renderPolitica() : renderGenerico()}
     </div>
   );
 };

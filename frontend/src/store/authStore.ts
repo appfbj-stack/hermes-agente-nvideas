@@ -31,7 +31,8 @@ export const useAuthStore = create<AuthState>((set) => ({
         // Read tenant_id and app_module from metadata
         const metadata = session.user.user_metadata || {};
         const tenantId = metadata.tenant_id || (session.user.email === 'admin@hermes.app' ? null : 'mock-tenant-id');
-        const appModule = metadata.app_module || 'politica';
+        // Default para 'geral' para contas antigas verem tudo
+        const appModule = metadata.app_module || 'geral';
         
         set({ 
           user: session.user, 
@@ -50,7 +51,8 @@ export const useAuthStore = create<AuthState>((set) => ({
         if (newSession?.user) {
           const metadata = newSession.user.user_metadata || {};
           const tenantId = metadata.tenant_id || (newSession.user.email === 'admin@hermes.app' ? null : 'mock-tenant-id');
-          const appModule = metadata.app_module || 'politica';
+          // Default para 'geral' para contas antigas verem tudo
+          const appModule = metadata.app_module || 'geral';
 
           set({ 
             user: newSession.user, 

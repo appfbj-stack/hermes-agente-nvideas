@@ -48,8 +48,10 @@ export const TenantLayout: React.FC = () => {
 
     if (role === 'superadmin') {
       configLinks.push({ name: 'Admin Master', path: '/admin/tenants', icon: Shield });
-      
-      // Superadmin vê TUDO para poder testar
+    }
+
+    if (role === 'superadmin' || appModule === 'geral') {
+      // Conta 'geral' (antiga ou sem nicho) ou superadmin vê TUDO
       return [
         ...baseLinks,
         { name: 'CRM Eleitoral', path: '/t/crm', icon: Users },
@@ -92,13 +94,8 @@ export const TenantLayout: React.FC = () => {
       ];
     }
 
-    // Default / Geral
-    return [
-      ...baseLinks,
-      { name: 'CRM', path: '/t/crm', icon: Briefcase },
-      { name: 'Agenda', path: '/t/calendar', icon: Calendar },
-      ...configLinks
-    ];
+    // Default fallback
+    return baseLinks;
   };
 
   const SIDEBAR_LINKS = getSidebarLinks();
