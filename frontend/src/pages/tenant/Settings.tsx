@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Save, Building, Globe, CreditCard, Users, Shield, Plus, Check, Smartphone, QrCode } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Save, Building, Globe, CreditCard, Users, Shield, Plus, Check, Smartphone, QrCode, RefreshCw } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 
 export const TenantSettings: React.FC = () => {
@@ -7,18 +7,80 @@ export const TenantSettings: React.FC = () => {
   const [activeTab, setActiveTab] = useState('Geral');
   const [isSaving, setIsSaving] = useState(false);
   const [waStatus, setWaStatus] = useState<'disconnected' | 'connecting' | 'connected'>('disconnected');
+  const [waInstance, setWaInstance] = useState<any>(null);
+  const [qrCodeBase64, setQrCodeBase64] = useState<string | null>(null);
+  const [isLoadingInstance, setIsLoadingInstance] = useState(false);
+
+  const fetchInstances = async () => {
+    if (!tenantId) return;
+    try {
+      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3333';
+      const res = await fetch(`${backendUrl}/api/whatsapp/instances/${tenantId}`);
+      const data = await res.json();
+      
+      if (data.instances && data.instances.length > 0) {
+        const instance = data.instances[0]; // Pegamos a primeira
+        setWaInstance(instance);
+        setWaStatus(instance.status as any);
+        if (instance.qr_code) {
+          setQrCodeBase64(instance.qr_code);
+        }
+      }
+    } catch (error) {
+      console.error("Erro ao buscar instâncias", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchInstances();
+  }, [tenantId]);
 
   const handleSave = () => {
     setIsSaving(true);
     setTimeout(() => setIsSaving(false), 1000);
   };
 
-  const handleConnectWhatsApp = () => {
-    setWaStatus('connecting');
-    // Simula tempo de leitura de QR Code para demonstração UI
-    setTimeout(() => {
-      setWaStatus('connected');
-    }, 3000);
+  const handleConnectWhatsApp = async () => {
+    if (!tenantId) return;
+    setIsLoadingInstance(true);
+    try {
+      const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3333';
+      
+      const res = await fetch(`${backendUrl}/api/whatsapp/instances/create`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          tenantId,
+          instanceName: `WA_${tenantId.substring(0, 8)}`
+        })
+      });
+      
+      const data = await res.json();
+      
+      if (!res.ok) {
+        alert(data.message || data.error || 'Erro ao criar instância');
+        return;
+      }
+
+      setWaInstance(data.instance);
+      setWaStatus('connecting');
+      
+      // Se a Uazapi retornar o QR Code direto no data.uazapi.qrcode
+      if (data.uazapi?.qrcode) {
+        setQrCodeBase64(data.uazapi.qrcode);
+      } else if (data.uazapi?.base64) {
+        setQrCodeBase64(data.uazapi.base64);
+      } else {
+        // Fallback UI
+        setTimeout(() => setWaStatus('connected'), 4000);
+      }
+
+    } catch (error) {
+      console.error("Erro ao conectar", error);
+      alert('Falha ao conectar com o servidor WhatsApp.');
+    } finally {
+      setIsLoadingInstance(false);
+    }
   };
 
   const TABS = [
@@ -156,20 +218,34 @@ export const TenantSettings: React.FC = () => {
                     </p>
                     <button 
                       onClick={handleConnectWhatsApp}
-                      className="bg-green-600 hover:bg-green-500 text-white px-6 py-3 rounded-xl font-medium transition-colors shadow-lg shadow-green-600/20 w-full"
+                      disabled={isLoadingInstance}
+                      className="bg-green-600 hover:bg-green-500 disabled:opacity-50 disabled:cursor-not-allowed text-white px-6 py-3 rounded-xl font-medium transition-colors shadow-lg shadow-green-600/20 w-full"
                     >
-                      Gerar QR Code
+                      {isLoadingInstance ? 'Gerando...' : 'Gerar QR Code'}
                     </button>
                   </>
                 ) : waStatus === 'connecting' ? (
                   <>
-                    <div className="w-48 h-48 bg-white/10 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-white/20 animate-pulse">
-                      <QrCode size={120} className="text-gray-500 opacity-50" />
+                    <div className="w-48 h-48 bg-white/10 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-white/20 relative overflow-hidden">
+                      {qrCodeBase64 ? (
+                        <img src={qrCodeBase64.includes('data:image') ? qrCodeBase64 : `data:image/png;base64,${qrCodeBase64}`} alt="QR Code" className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="animate-pulse flex items-center justify-center w-full h-full">
+                          <QrCode size={120} className="text-gray-500 opacity-50" />
+                        </div>
+                      )}
                     </div>
                     <h3 className="text-lg font-semibold text-white mb-2">Aguardando Leitura...</h3>
                     <p className="text-gray-400 text-sm mb-4">
                       Abra o WhatsApp no seu celular, vá em "Aparelhos Conectados" e escaneie.
                     </p>
+                    <button 
+                      onClick={fetchInstances}
+                      className="flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 text-white px-6 py-2 rounded-xl text-sm font-medium transition-colors border border-white/10 w-full"
+                    >
+                      <RefreshCw size={16} />
+                      Já escaneei (Atualizar)
+                    </button>
                   </>
                 ) : (
                   <>
@@ -181,7 +257,12 @@ export const TenantSettings: React.FC = () => {
                       Instância ativa e pronta para enviar/receber mensagens.
                     </p>
                     <button 
-                      onClick={() => setWaStatus('disconnected')}
+                      onClick={() => {
+                        // TODO: Implementar rota de desconectar na API
+                        setWaStatus('disconnected');
+                        setQrCodeBase64(null);
+                        setWaInstance(null);
+                      }}
                       className="bg-red-500/10 hover:bg-red-500/20 text-red-400 px-6 py-2 rounded-xl font-medium transition-colors border border-red-500/20 w-full"
                     >
                       Desconectar
@@ -197,8 +278,12 @@ export const TenantSettings: React.FC = () => {
                   </h4>
                   <div className="space-y-3 text-sm">
                     <div className="flex justify-between border-b border-white/5 pb-2">
-                      <span className="text-gray-400">ID do Tenant</span>
-                      <span className="text-gray-300 font-mono">{tenantId || 'demo_123'}</span>
+                      <span className="text-gray-400">ID da Instância (Banco)</span>
+                      <span className="text-gray-300 font-mono">{waInstance?.id || '...'}</span>
+                    </div>
+                    <div className="flex justify-between border-b border-white/5 pb-2">
+                      <span className="text-gray-400">Nome da Instância</span>
+                      <span className="text-gray-300 font-mono">{waInstance?.instance_name || '...'}</span>
                     </div>
                     <div className="flex justify-between border-b border-white/5 pb-2">
                       <span className="text-gray-400">Status do Webhook</span>
