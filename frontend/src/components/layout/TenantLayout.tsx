@@ -10,21 +10,21 @@ import {
   Bell,
   Menu,
   X,
-  BookOpen,
-  Wrench,
+  Users,
+  Flag,
+  Building2,
   Shield
 } from 'lucide-react';
 import { cn } from './SuperAdminLayout';
 import { useAuthStore } from '../../store/authStore';
 
 const SIDEBAR_LINKS = [
-  { name: 'Início', path: '/t', icon: LayoutDashboard },
+  { name: 'Painel Político', path: '/t', icon: LayoutDashboard },
   { name: 'Hermes IA', path: '/t/chat', icon: Bot },
-  { name: 'Agenda', path: '/t/calendar', icon: Calendar },
-  { name: 'CRM', path: '/t/crm', icon: Briefcase },
-  { name: 'Agenda Pastoral', path: '/t/pastoral', icon: BookOpen },
-  { name: 'Bíblia', path: '/t/biblia', icon: BookOpen },
-  { name: 'Oficina Mecânica', path: '/t/oficina', icon: Wrench },
+  { name: 'CRM Eleitoral', path: '/t/crm', icon: Users },
+  { name: 'Agenda Política', path: '/t/calendar', icon: Calendar },
+  { name: 'Lideranças', path: '/t/liderancas', icon: Flag },
+  { name: 'Gabinete Digital', path: '/t/gabinete', icon: Building2 },
   { name: 'Configurações', path: '/t/settings', icon: Settings },
   { name: 'Admin Master', path: '/admin/tenants', icon: Shield },
 ];
