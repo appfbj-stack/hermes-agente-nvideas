@@ -13,8 +13,12 @@ import { TenantCrm } from './pages/tenant/Crm';
 import { TenantCalendar } from './pages/tenant/Calendar';
 import { Liderancas } from './pages/tenant/Liderancas';
 import { GabineteDigital } from './pages/tenant/Gabinete';
+import { Pastoral } from './pages/tenant/Pastoral';
+import { OficinaMecanica } from './pages/tenant/Oficina';
+import BibliaApp from './pages/tenant/biblia/BibliaApp';
 import { TenantSettings } from './pages/tenant/Settings';
 import { Login } from './pages/auth/Login';
+import { Register } from './pages/auth/Register';
 import { useAuthStore } from './store/authStore';
 
 // Protected Route Wrapper
@@ -54,6 +58,8 @@ function App() {
       <Routes>
         {/* Public Routes */}
         <Route path="/auth" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/register/:moduleName" element={<Register />} />
         
         {/* Root Redirect */}
         <Route path="/" element={<Navigate to="/auth" replace />} />
@@ -83,6 +89,9 @@ function App() {
           <Route path="crm" element={<TenantCrm />} />
           <Route path="liderancas" element={<Liderancas />} />
           <Route path="gabinete" element={<GabineteDigital />} />
+          <Route path="pastoral" element={<Pastoral />} />
+          <Route path="oficina" element={<OficinaMecanica />} />
+          <Route path="biblia/*" element={<BibliaApp />} />
           <Route path="settings" element={<TenantSettings />} />
         </Route>
       </Routes>

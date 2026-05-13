@@ -13,26 +13,18 @@ import {
   Users,
   Flag,
   Building2,
-  Shield
+  Shield,
+  BookOpen,
+  Wrench
 } from 'lucide-react';
 import { cn } from './SuperAdminLayout';
 import { useAuthStore } from '../../store/authStore';
 
-const SIDEBAR_LINKS = [
-  { name: 'Painel Político', path: '/t', icon: LayoutDashboard },
-  { name: 'Hermes IA', path: '/t/chat', icon: Bot },
-  { name: 'CRM Eleitoral', path: '/t/crm', icon: Users },
-  { name: 'Agenda Política', path: '/t/calendar', icon: Calendar },
-  { name: 'Lideranças', path: '/t/liderancas', icon: Flag },
-  { name: 'Gabinete Digital', path: '/t/gabinete', icon: Building2 },
-  { name: 'Configurações', path: '/t/settings', icon: Settings },
-  { name: 'Admin Master', path: '/admin/tenants', icon: Shield },
-];
-
 export const TenantLayout: React.FC = () => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const location = useLocation();
   const navigate = useNavigate();
-  const { signOut, user } = useAuthStore();
+  const { signOut, appModule, role, user } = useAuthStore();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
   // Mock tenant name for now
@@ -40,8 +32,63 @@ export const TenantLayout: React.FC = () => {
 
   const handleLogout = async () => {
     await signOut();
-    navigate('/auth');
+    navigate('/login');
   };
+
+  // Define links dinamicamente baseado no módulo do Tenant
+  const getSidebarLinks = () => {
+    const baseLinks = [
+      { name: 'Painel', path: '/t', icon: LayoutDashboard },
+      { name: 'Hermes IA', path: '/t/chat', icon: Bot },
+    ];
+
+    const configLinks = [
+      { name: 'Configurações', path: '/t/settings', icon: Settings },
+    ];
+
+    if (role === 'superadmin') {
+      configLinks.push({ name: 'Admin Master', path: '/admin/tenants', icon: Shield });
+    }
+
+    if (appModule === 'politica') {
+      return [
+        ...baseLinks,
+        { name: 'CRM Eleitoral', path: '/t/crm', icon: Users },
+        { name: 'Agenda Política', path: '/t/calendar', icon: Calendar },
+        { name: 'Lideranças', path: '/t/liderancas', icon: Flag },
+        { name: 'Gabinete Digital', path: '/t/gabinete', icon: Building2 },
+        ...configLinks
+      ];
+    }
+
+    if (appModule === 'oficina') {
+      return [
+        ...baseLinks,
+        { name: 'Oficina Mecânica', path: '/t/oficina', icon: Wrench },
+        { name: 'Agenda', path: '/t/calendar', icon: Calendar },
+        ...configLinks
+      ];
+    }
+
+    if (appModule === 'igreja') {
+      return [
+        ...baseLinks,
+        { name: 'Agenda Pastoral', path: '/t/pastoral', icon: BookOpen },
+        { name: 'Bíblia', path: '/t/biblia', icon: BookOpen },
+        ...configLinks
+      ];
+    }
+
+    // Default / Geral
+    return [
+      ...baseLinks,
+      { name: 'CRM', path: '/t/crm', icon: Briefcase },
+      { name: 'Agenda', path: '/t/calendar', icon: Calendar },
+      ...configLinks
+    ];
+  };
+
+  const SIDEBAR_LINKS = getSidebarLinks();
 
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
