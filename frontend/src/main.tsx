@@ -2,6 +2,7 @@ import { Component, ReactNode, StrictMode, useEffect, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App'
 import './index.css'
+import { ErrorBoundary } from './components/ErrorBoundary'
 
 type FatalError = {
   message: string
@@ -81,6 +82,8 @@ function RootApp() {
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <RootApp />
+    <ErrorBoundary>
+      <RootApp />
+    </ErrorBoundary>
   </StrictMode>,
 )

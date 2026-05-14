@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Save, Building, Globe, CreditCard, Users, Shield, Plus, Check, Smartphone, QrCode, RefreshCw } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
+import { useRealtime } from '../../hooks/useRealtime';
 
 export const TenantSettings: React.FC = () => {
   const { user, tenantId } = useAuthStore();
@@ -34,6 +35,17 @@ export const TenantSettings: React.FC = () => {
   useEffect(() => {
     fetchInstances();
   }, [tenantId]);
+
+  // Auditoria: Integração do Realtime para auto-update do WhatsApp Status
+  useRealtime('whatsapp_instances', tenantId, (payload) => {
+    if (payload.new) {
+      setWaInstance(payload.new);
+      setWaStatus(payload.new.status as any);
+      if (payload.new.qr_code) {
+        setQrCodeBase64(payload.new.qr_code);
+      }
+    }
+  }, 'UPDATE');
 
   const handleSave = () => {
     setIsSaving(true);
