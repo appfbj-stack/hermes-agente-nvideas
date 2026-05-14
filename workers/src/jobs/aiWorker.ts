@@ -8,7 +8,7 @@ export const startAiWorker = () => {
     'ai-processing',
     async (job) => {
       console.log(`[AI Worker] Processando Job ${job.id}:`, job.data);
-      const { tenantId, from, text, sessionId } = job.data;
+      const { tenantId, instanceId, from, text, sessionId } = job.data;
       
       const hermesUrl = process.env.HERMES_URL || 'http://localhost:3334';
       
@@ -28,6 +28,7 @@ export const startAiWorker = () => {
           // 2. Coloca a resposta pronta na fila de disparo do WhatsApp
           await whatsappQueue.add('send-whatsapp', {
             tenantId,
+            instanceId,
             to: from,
             text: aiReply
           });

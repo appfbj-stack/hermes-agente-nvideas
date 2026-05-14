@@ -8,7 +8,7 @@ export const startWhatsAppWorker = () => {
     'whatsapp-messages',
     async (job) => {
       console.log(`[WhatsApp Worker] Processando Job ${job.id}:`, job.data);
-      const { tenantId, to, text } = job.data;
+      const { tenantId, instanceId, to, text } = job.data;
       
       // Chama o endpoint local do backend que já implementa a lógica do Uazap
       const backendUrl = process.env.BACKEND_URL || 'http://localhost:3333';
@@ -16,6 +16,7 @@ export const startWhatsAppWorker = () => {
       try {
         await axios.post(`${backendUrl}/api/whatsapp/send`, {
           tenantId,
+          instanceId,
           to,
           text
         });

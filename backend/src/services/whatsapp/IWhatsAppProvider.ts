@@ -2,6 +2,7 @@ export interface SendMessageParams {
   to: string;
   text: string;
   tenantId: string;
+  instanceId?: string;
 }
 
 export interface SendMediaParams {
@@ -9,13 +10,14 @@ export interface SendMediaParams {
   mediaUrl: string;
   caption?: string;
   tenantId: string;
+  instanceId?: string;
 }
 
 export interface IWhatsAppProvider {
   /**
-   * Inicializa ou recupera o status da sessão para um determinado tenant
+   * Inicializa ou recupera o status da sessão para um determinado tenant/instância
    */
-  getSessionStatus(tenantId: string): Promise<any>;
+  getSessionStatus(tenantId: string, instanceId?: string): Promise<any>;
 
   /**
    * Envia uma mensagem de texto simples
@@ -30,5 +32,5 @@ export interface IWhatsAppProvider {
   /**
    * Registra webhooks na API escolhida para receber as mensagens de volta
    */
-  registerWebhook(tenantId: string, webhookUrl: string): Promise<any>;
+  registerWebhook(tenantId: string, webhookUrl: string, instanceId?: string): Promise<any>;
 }

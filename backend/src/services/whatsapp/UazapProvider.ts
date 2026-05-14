@@ -3,14 +3,14 @@ import { IWhatsAppProvider, SendMediaParams, SendMessageParams } from './IWhatsA
 
 export class UazapWhatsAppProvider implements IWhatsAppProvider {
   private apiUrl: string;
-  private apiToken: string;
+  private globalApiToken: string;
 
   constructor() {
     this.apiUrl = process.env.UAZAP_API_URL || '';
-    // Aqui usamos o token global da instância para os disparos
-    this.apiToken = process.env.UAZAP_API_KEY || '';
+    // Aqui usamos o token global da instância para os disparos (fallback)
+    this.globalApiToken = process.env.UAZAP_API_KEY || '';
 
-    if (!this.apiUrl || !this.apiToken) {
+    if (!this.apiUrl || !this.globalApiToken) {
       console.warn('⚠️ Uazap credentials not fully configured in environment variables.');
     }
   }
@@ -18,11 +18,12 @@ export class UazapWhatsAppProvider implements IWhatsAppProvider {
   /**
    * Inicializa ou recupera o status da sessão
    */
-  async getSessionStatus(tenantId: string): Promise<any> {
+  async getSessionStatus(tenantId: string, instanceId?: string): Promise<any> {
     try {
+      const token = instanceId || this.globalApiToken;
       const response = await axios.get(`${this.apiUrl}/instance/status`, {
         headers: {
-          'token': this.apiToken,
+          'token': token,
         },
       });
       return response.data;
@@ -37,13 +38,14 @@ export class UazapWhatsAppProvider implements IWhatsAppProvider {
    */
   async sendMessage(params: SendMessageParams): Promise<any> {
     try {
+      const token = params.instanceId || this.globalApiToken;
       const response = await axios.post(`${this.apiUrl}/send/text`, {
         number: params.to,
         text: params.text,
         delay: 1200
       }, {
         headers: {
-          'token': this.apiToken,
+          'token': token,
           'Content-Type': 'application/json'
         }
       });
@@ -59,6 +61,7 @@ export class UazapWhatsAppProvider implements IWhatsAppProvider {
    */
   async sendMedia(params: SendMediaParams): Promise<any> {
     try {
+      const token = params.instanceId || this.globalApiToken;
       const response = await axios.post(`${this.apiUrl}/send/media`, {
         number: params.to,
         media: params.mediaUrl,
@@ -66,7 +69,7 @@ export class UazapWhatsAppProvider implements IWhatsAppProvider {
         delay: 1200
       }, {
         headers: {
-          'token': this.apiToken,
+          'token': token,
           'Content-Type': 'application/json'
         }
       });
@@ -80,8 +83,9 @@ export class UazapWhatsAppProvider implements IWhatsAppProvider {
   /**
    * Registra o Webhook para receber as respostas do cliente no nosso SaaS
    */
-  async registerWebhook(tenantId: string, webhookUrl: string): Promise<any> {
+  async registerWebhook(tenantId: string, webhookUrl: string, instanceId?: string): Promise<any> {
     try {
+      const token = instanceId || this.globalApiToken;
       const response = await axios.post(`${this.apiUrl}/webhook/set`, {
         enabled: true,
         url: webhookUrl,
@@ -92,7 +96,7 @@ export class UazapWhatsAppProvider implements IWhatsAppProvider {
         ]
       }, {
         headers: {
-          'token': this.apiToken,
+          'token': token,
           'Content-Type': 'application/json'
         }
       });
