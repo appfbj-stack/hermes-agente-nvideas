@@ -41,7 +41,12 @@ export const Register: React.FC = () => {
         }
       });
 
-      if (signUpError) throw signUpError;
+      if (signUpError) {
+        if (signUpError.message.includes('User already registered')) {
+          throw new Error('Este e-mail já está em uso. Por favor, faça login ou use outro e-mail.');
+        }
+        throw signUpError;
+      }
 
       // Sucesso!
       alert('Conta criada com sucesso! Faça login para continuar.');
@@ -67,17 +72,17 @@ export const Register: React.FC = () => {
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-secondary to-accent shadow-lg shadow-secondary/30 mb-6">
             <BrainCircuit size={32} className="text-white" />
           </div>
-          <h1 className="text-3xl font-bold tracking-tight">
+          <h1 className="text-3xl sm:text-4xl font-bold tracking-tight">
             Criar conta no <span className="neon-text-primary">Hermes</span>
           </h1>
           
-          <div className="mt-4 flex items-center justify-center gap-2 bg-white/5 py-2 px-4 rounded-full border border-white/10 w-max mx-auto">
-            <moduleInfo.icon size={18} className={moduleInfo.color} />
-            <span className="text-gray-300 text-sm">Módulo Selecionado: <strong>{moduleInfo.title}</strong></span>
+          <div className="mt-4 flex items-center justify-center gap-2 bg-white/5 py-2 px-4 rounded-full border border-white/10 w-max mx-auto max-w-[90%]">
+            <moduleInfo.icon size={18} className={`${moduleInfo.color} shrink-0`} />
+            <span className="text-gray-300 text-sm truncate">Módulo Selecionado: <strong>{moduleInfo.title}</strong></span>
           </div>
         </div>
 
-        <div className="glass-panel p-8 rounded-3xl border border-white/10 shadow-2xl">
+        <div className="glass-panel p-6 sm:p-8 rounded-3xl border border-white/10 shadow-2xl mx-4 sm:mx-0">
           <form onSubmit={handleRegister} className="space-y-4">
             
             {error && (
