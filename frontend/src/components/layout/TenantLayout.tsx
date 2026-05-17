@@ -50,8 +50,7 @@ export const TenantLayout: React.FC = () => {
       configLinks.push({ name: 'Admin Master', path: '/admin/tenants', icon: Shield });
     }
 
-    if (role === 'superadmin' || appModule === 'geral') {
-      // Conta 'geral' (antiga ou sem nicho) ou superadmin vê TUDO
+    if (role === 'superadmin') {
       return [
         ...baseLinks,
         { name: 'CRM Eleitoral', path: '/t/crm', icon: Users },
@@ -61,6 +60,13 @@ export const TenantLayout: React.FC = () => {
         { name: 'Oficina Mecânica', path: '/t/oficina', icon: Wrench },
         { name: 'Agenda Pastoral', path: '/t/pastoral', icon: BookOpen },
         { name: 'Bíblia', path: '/t/biblia', icon: BookOpen },
+        ...configLinks
+      ];
+    }
+
+    if (appModule === 'geral') {
+      return [
+        ...baseLinks,
         ...configLinks
       ];
     }
