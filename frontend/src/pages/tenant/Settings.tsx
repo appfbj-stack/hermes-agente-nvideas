@@ -151,7 +151,7 @@ export const TenantSettings: React.FC = () => {
                   <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-primary-light to-secondary/30 flex items-center justify-center font-bold text-2xl border border-white/10 shadow-lg shrink-0">
                     AC
                   </div>
-                  <div className="text-center sm:text-left">
+                  <div className="text-center sm:text-left mt-2">
                     <button className="px-4 py-2 bg-white/10 hover:bg-white/20 text-white text-sm font-medium rounded-lg transition-colors border border-white/10 mb-2">
                       Trocar Logo
                     </button>

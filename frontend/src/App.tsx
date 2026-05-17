@@ -62,7 +62,7 @@ function App() {
         <Route path="/register/:moduleName" element={<Register />} />
         
         {/* Root Redirect */}
-        <Route path="/" element={<Navigate to="/auth" replace />} />
+        <Route path="/" element={<Navigate to="/t" replace />} />
         
         {/* Superadmin Routes */}
         <Route path="/admin" element={
