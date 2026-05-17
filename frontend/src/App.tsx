@@ -58,6 +58,7 @@ function App() {
       <Routes>
         {/* Public Routes */}
         <Route path="/auth" element={<Login />} />
+        <Route path="/login" element={<Navigate to="/auth" replace />} />
         <Route path="/register" element={<Register />} />
         <Route path="/register/:moduleName" element={<Register />} />
         
