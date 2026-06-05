@@ -5,4 +5,8 @@ packages:
   - "hermes"
 
 onlyBuiltDependencies:
-  - "*"
+  - esbuild
+  - "@google/genai"
+  - core-js
+  - msgpackr-extract
+  - protobufjs
