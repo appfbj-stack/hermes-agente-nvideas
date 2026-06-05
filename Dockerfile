@@ -8,16 +8,17 @@ ENV VITE_SUPABASE_ANON_KEY=$VITE_SUPABASE_ANON_KEY
 
 WORKDIR /app
 
-# Copy package files
-COPY package.json pnpm-lock.yaml* ./
+# Install pnpm globally
+RUN npm install -g pnpm
 
-# Install dependencies using pnpm
-COPY pnpm-workspace.yaml ./
-COPY package.json pnpm-lock.yaml* ./
-RUN npm install -g pnpm && pnpm install
+# Copy workspace config and lockfile
+COPY pnpm-workspace.yaml package.json pnpm-lock.yaml* ./
 
 # Copy the rest of the application
 COPY . .
+
+# Install all workspace dependencies (runs build scripts for approved deps)
+RUN pnpm install
 
 # Build the app
 RUN pnpm run build
