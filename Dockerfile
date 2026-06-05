@@ -27,7 +27,7 @@ RUN pnpm run build
 FROM nginx:alpine
 
 # Copy built assets from build stage
-COPY --from=build /app/dist /usr/share/nginx/html
+COPY --from=build /app/frontend/dist /usr/share/nginx/html
 
 # Add nginx config to handle client-side routing
 RUN echo 'server { \
