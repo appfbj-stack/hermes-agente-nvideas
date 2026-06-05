@@ -4,9 +4,9 @@ packages:
   - "workers/*"
   - "hermes"
 
-onlyBuiltDependencies:
-  - esbuild
-  - "@google/genai"
-  - core-js
-  - msgpackr-extract
-  - protobufjs
+allowBuilds:
+  esbuild: true
+  "@google/genai": true
+  core-js: true
+  msgpackr-extract: true
+  protobufjs: true
