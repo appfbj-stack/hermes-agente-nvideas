@@ -1,5 +1,5 @@
 import { Worker } from 'bullmq';
-import { connection: connection as any } from '../utils/redis';
+import { connection } from '../utils/redis';
 import { whatsappQueue } from '../queues';
 import axios from 'axios';
 
@@ -40,7 +40,7 @@ export const startAiWorker = () => {
         throw error;
       }
     },
-    { connection: connection as any }
+    { connection }
   );
 
   worker.on('failed', (job, err) => {
