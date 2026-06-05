@@ -69,7 +69,7 @@ Seu objetivo √© fazer o atendimento ao cliente, qualificar leads e ajudar nas d√
     try {
       // 6. Chama o modelo de linguagem (LLM)
       const response = await openai.chat.completions.create({
-        model: process.env.OPENROUTER_API_KEY ? 'deepseek/deepseek-chat' : 'gpt-4o-mini',
+        model: process.env.OPENROUTER_API_KEY ? 'minimax/minimax-m3' : 'gpt-4o-mini',
         messages: messages as any,
         temperature: 0.7,
       });
