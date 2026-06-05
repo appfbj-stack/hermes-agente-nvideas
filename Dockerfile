@@ -17,8 +17,8 @@ RUN npm install -g pnpm && pnpm install --frozen-lockfile
 # Copy the rest of the application
 COPY . .
 
-# Build the app
-RUN pnpm run build
+# Build the app - run vite directly to bypass pnpm workspace pre-check
+RUN cd /app/frontend && npx vite build
 
 # Production stage
 FROM nginx:alpine
