@@ -12,13 +12,15 @@ WORKDIR /app
 COPY package.json pnpm-lock.yaml* ./
 
 # Install dependencies using pnpm
+COPY pnpm-workspace.yaml ./
+COPY package.json pnpm-lock.yaml* ./
 RUN npm install -g pnpm && pnpm install --frozen-lockfile
 
 # Copy the rest of the application
 COPY . .
 
-# Build the app - run vite directly to bypass pnpm workspace pre-check
-RUN cd /app/frontend && npx vite build
+# Build the app
+RUN pnpm run build
 
 # Production stage
 FROM nginx:alpine
