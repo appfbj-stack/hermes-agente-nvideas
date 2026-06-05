@@ -5,7 +5,7 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: hermes-backend
+    container_name: hermes-nv-backend
     ports:
       - "3333:3333"
     env_file:
@@ -19,7 +19,7 @@ services:
 
   redis:
     image: redis:alpine
-    container_name: hermes-redis
+    container_name: hermes-nv-redis
     ports:
       - "6379:6379"
     restart: unless-stopped
@@ -30,7 +30,7 @@ services:
     build:
       context: ./hermes
       dockerfile: Dockerfile
-    container_name: hermes-agent
+    container_name: hermes-nv-agent
     ports:
       - "3334:3334"
     env_file:
@@ -46,7 +46,7 @@ services:
     build:
       context: ./workers
       dockerfile: Dockerfile
-    container_name: hermes-workers
+    container_name: hermes-nv-workers
     env_file:
       - .env
     environment:

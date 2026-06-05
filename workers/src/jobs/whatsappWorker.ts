@@ -1,5 +1,5 @@
 import { Worker } from 'bullmq';
-import { connection } from '../utils/redis';
+import { connection: connection as any } from '../utils/redis';
 // Simula a injeção do axios para não precisar importar todo o backend aqui
 import axios from 'axios';
 
@@ -26,7 +26,7 @@ export const startWhatsAppWorker = () => {
         throw error;
       }
     },
-    { connection }
+    { connection: connection as any }
   );
 
   worker.on('failed', (job, err) => {

@@ -3,6 +3,9 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-export const connection = new Redis(process.env.REDIS_URL || 'redis://localhost:6379', {
+const redis = new Redis(process.env.REDIS_URL || 'redis://localhost:6379', {
   maxRetriesPerRequest: null,
 });
+
+// Using type assertion to fix BullMQ compatibility issue
+export const connection = redis as any;
